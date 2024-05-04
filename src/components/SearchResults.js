@@ -9,6 +9,7 @@ import {
   Card,
   CardBody,
   Divider,
+  Spinner,
 } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
 import DailyWordList from "./DailyWordsList";
@@ -17,10 +18,12 @@ const SearchResults = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [suggestedWords, setSuggestedWords] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = async () => {
-    // create auto complet function from available word in api
-
+    // create auto complet function from available word in api | Failed
+    setIsLoading(true); // Set loading state to true before making API request
+    
     try {
       const response = await axios.get(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`
@@ -34,6 +37,8 @@ const SearchResults = () => {
       } else {
         console.error("Error fetching search results:", error);
       }
+    } finally {
+      setIsLoading(false); // diable loading state after completing API request
     }
   };
 
@@ -55,11 +60,13 @@ const SearchResults = () => {
     ));
   };
 
+
   return (
     <div
       className="flex-col w-full h-full transition-all main-hero
     "
     >
+    
       <div className="flex max-w-full h-auto" id="search-bar">
         <Input
           type="text"
@@ -81,7 +88,9 @@ const SearchResults = () => {
         <Button className="ml-2" variant="bordered" onClick={handleSearch}>
           Search
         </Button>
+        {isLoading && <Spinner color="default" className="w-full h-full justify-center align-center transition-all absolute z-100" />}
       </div>
+      
       {/* Search Results Container */}
       <section className="mt-12">
         <Tabs
@@ -104,7 +113,7 @@ const SearchResults = () => {
                             <div key={idx}>
                               {idx > 0 &&
                                 result.phonetics[idx - 1].text !==
-                                  phonetic.text && <p>|</p>}
+                                  phonetic.text && null}
                               <p className="text-lg tracking-wider">
                                 {phonetic.text}
                               </p>

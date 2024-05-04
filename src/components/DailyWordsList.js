@@ -44,9 +44,9 @@ const DailyWordList = ({ setSearchTerm }) => {
       </div>
       
       {/* Scroll to top button */}
-      <icon className="fixed bottom-4 right-4 justify-center  ">
+      <div className="fixed bottom-4 right-4 justify-center z-100 ">
         <ScrollToTop className="" component={<FaArrowUp className="to-top-btn flex text-lg justify-content -center center align-self-center" />} smooth color="#000000" />
-      </icon>
+      </div>
       
     </div>
   );
