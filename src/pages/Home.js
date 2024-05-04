@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <>
       <div
-        className="w-full h-full fixed bootom-0 flex-col gap-12 transition-all mb-0 my-container"
+        className="w-full h-auto  bootom-0 flex-col gap-12 mb-0 my-container"
         id="search-bar"
       >
         {/* <Image
