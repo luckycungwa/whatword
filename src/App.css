@@ -10,6 +10,7 @@ body {
   font-family: "Montagu Slab", serif;
 }
 
+/* Main Responsive & lay out assit */
 .main-div {
   width: 100vw; /* Fills viewport width */
   height: 100vh; /* Fills viewport height */
@@ -25,6 +26,32 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: center; /* Very important becaise it Centers elements horizontally */
+}
+
+.clickable {
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+.black {
+  color: white;
+  background-color: #111;
+}
+
+/* Override default button styles cause it cannot center a simple icon */
+.to-top-btn {
+  display: inline-block !important;
+  margin: 2px !important;
+  align-self: center !important;
+  right: 2px;
+  /* background-color: #111; */
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  /* margin-top: 12px; */
+  width: 100%;
+
 }

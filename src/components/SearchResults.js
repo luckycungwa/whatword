@@ -44,7 +44,12 @@ const SearchResults = () => {
 
   const renderChips = (words, onClick) => {
     return words.map((word, index) => (
-      <Chip key={index} onClick={() => onClick(word)}>
+      <Chip
+        size="sm"
+        key={index}
+        onClick={() => onClick(word)}
+        className="text-xs smb-8 clickable px-2"
+      >
         {word}
       </Chip>
     ));
@@ -55,7 +60,7 @@ const SearchResults = () => {
       className="flex-col w-full h-full transition-all main-hero
     "
     >
-      <div className="flex max-w-full h-auto">
+      <div className="flex max-w-full h-auto" id="search-bar">
         <Input
           type="text"
           value={searchTerm}
@@ -77,10 +82,8 @@ const SearchResults = () => {
           Search
         </Button>
       </div>
-
-      
-
-      <div className="mt-12">
+      {/* Search Results Container */}
+      <section className="mt-12">
         <Tabs
           variant="highlight"
           placement="top"
@@ -90,20 +93,27 @@ const SearchResults = () => {
             <Tab key={index} title={result.word}>
               <Card className="px-4 py-4">
                 <CardBody>
-                  {result.phonetics.map((phonetic, idx) => (
-                    <div key={idx}>
-                      <div className="flex row gap-2">
-                        <p className="text-lg tracking-wider capitalize font-bold">
-                          {" "}
-                          {result.word}{" "}
-                        </p>
-                        <p>|</p>
-                        <p className="text-lg tracking-wider">
-                          {phonetic.text}
-                        </p>
+                  <div className="flex flex-col gap-2">
+                    {result.phonetics.length > 0 && (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex row gap-2">
+                          <p className="text-lg tracking-wider capitalize font-bold">
+                            {result.word}
+                          </p>
+                          {result.phonetics.map((phonetic, idx) => (
+                            <div key={idx}>
+                              {idx > 0 &&
+                                result.phonetics[idx - 1].text !==
+                                  phonetic.text && <p>|</p>}
+                              <p className="text-lg tracking-wider">
+                                {phonetic.text}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )}
+                  </div>
 
                   {result.meanings.map((meaning, idx) => (
                     <div key={idx}>
@@ -111,45 +121,40 @@ const SearchResults = () => {
                         ({meaning.partOfSpeech})
                       </h4>
                       <Divider className="mb-2" />
+                      {/* Definition Container */}
                       {meaning.definitions.map((definition, i) => (
                         <div key={i} className="flex flex-col gap-2">
-                          <p className="text-sm">{definition.definition}</p>
-                          {definition.synonyms && (
-                            <div className="flex flex-wrap gap-2">
-                              <Chip
-                                variant="light"
-                                size="sm"
-                                className="cursor-pointer text-sm"
-                                key={index}
-                                onClick={() =>
-                                  handleSearch(definition.antonyms)
-                                }
-                              >
-                                {renderChips(
-                                  definition.synonyms,
-                                  handleSuggestedWordClick
-                                )}
-                              </Chip>
-                            </div>
-                          )}
-                          {definition.antonyms && (
-                            <div className="flex flex-wrap gap-2">
-                              <Chip
-                                variant="light"
-                                size="sm"
-                                className="cursor-pointer"
-                                key={index}
-                                onClick={() =>
-                                  handleSearch(definition.antonyms)
-                                }
-                              >
-                                {renderChips(
-                                  definition.antonyms,
-                                  handleSuggestedWordClick
-                                )}
-                              </Chip>
-                            </div>
-                          )}
+                          {/* Definition | List*/}
+                          <li className="text-sm list-disc pl-1">
+                            {definition.definition}
+                          </li>
+                          {/* Synonyms Chips */}
+                          <div>
+                            {definition.synonyms &&
+                              definition.synonyms.length > 0 && (
+                                <div
+                                  className="flex flex-wrap gap-2"
+                                  key={index}
+                                >
+                                  {renderChips(
+                                    definition.synonyms,
+                                    handleSuggestedWordClick
+                                  )}
+                                </div>
+                              )}
+                          </div>
+                          {/* Antonyms Chips */}
+                          <div>
+                            {definition.antonyms &&
+                              definition.antonyms.length > 0 && (
+                                <div className="" key={index}>
+                                  {renderChips(
+                                    definition.antonyms,
+                                    handleSuggestedWordClick
+                                  )}
+                                </div>
+                              )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -157,12 +162,18 @@ const SearchResults = () => {
 
                   {/* Examples Section */}
                   <div className="mt-4">
+                    <Divider className="mb-4" />
                     <h4 className="text-md mb-1 italic">Examples</h4>
                     {result.meanings.map((meaning, idx) => (
                       <div key={idx}>
                         {meaning.definitions.map((definition, i) => (
-                          <div key={i} className="flex flex-col gap-2">
-                            <p className="text-sm">{definition.example}</p>
+                          <div
+                            key={i}
+                            className="flex flex-col tracking-normal"
+                          >
+                            <p className=" text-xs text-lighter">
+                              {definition.example}
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -173,31 +184,15 @@ const SearchResults = () => {
             </Tab>
           ))}
         </Tabs>
-
-        {/* Display suggested words if word was misspelled */}
-        {suggestedWords.length > 0 && (
-          <div>
-            <p>Word not found. Did you mean:</p>
-            <div>
-              {suggestedWords.map((word, index) => (
-                <Chip
-                  className="cursor-pointer"
-                  key={index}
-                  onClick={() => handleSuggestedWordClick(word)}
-                >
-                  {word}
-                </Chip>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      </section>
       <div>
         {/* render daily suggestions or results for searched item */}
-      <div className="flex flex-col gap-4 mt-16">
-        <p className="text-small tracking-wide font-bold">Try one of these words:</p>
-        <DailyWordList />
-      </div>
+        <div className="flex flex-col gap-4 mt-16">
+          <p className="text-small tracking-wide font-bold">
+            Try one of these words:
+          </p>
+          <DailyWordList setSearchTerm={setSearchTerm} />
+        </div>
       </div>
     </div>
   );

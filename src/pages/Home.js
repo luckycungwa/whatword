@@ -15,7 +15,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="w-full h-full flex-col gap-12 transition-all w-fill mb-24 my-container">
+      <div className="w-full h-dvh flex-col gap-12 transition-all mb-24 my-container" id="search-bar">
         {/* <Image
           objectFit="cover"
           className="w-full h-full"
@@ -23,7 +23,7 @@ const Home = () => {
           src={heroImage}
           fallbackSrc="https://via.placeholder.com/1920x1080"
         /> */}
-        <div className="flex-col mt-24  ">
+        <div className="flex-col mt-24  " >
           <h1 className="text-5xl font-bold capitalize">Whatword?</h1>
           <p className="text-xl tracking-widest lowercase">
             {" "}
@@ -34,9 +34,12 @@ const Home = () => {
         {/*  */}
           <SearchResults searchTerm={searchTerm} />
         </div>
+        <div className="transitiion-all ease-in-out 3s place-content-end justify-between grid grid-cols-1 gap-4 footer">
+        <Footer />
+      </div>
       </div>
       
-      <Footer />
+      
     </>
   );
 };
