@@ -10,20 +10,32 @@ import {
   CardBody,
   Divider,
   Spinner,
+  // Alert,
 } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
-import DailyWordList from "./DailyWordsList";
+import DailyWordList from "./DailyWordsList";   //get the random words for start suugestion
+import wordList from '../data/wordList.json'; //stores all random words for misspelling
+import levenshtein from 'js-levenshtein'; //damn i didnt know this efficient tool. damn :D
+
+// Function to get similar words using Levenshtein distance
+const getSimilarWords = (input, wordList) => {
+  const maxDistance = 3; // Maximum Levenshtein | common letter of tghe searched word
+  const lowerInput = input.toLowerCase();
+  const words = Object.values(wordList).flat(); // Flatten the wordList to get all words
+  return words.filter(word => levenshtein(lowerInput, word.toLowerCase()) <= maxDistance);
+};
 
 const SearchResults = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [suggestedWords, setSuggestedWords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSearch = async () => {
-    // create auto complet function from available word in api | Failed
     setIsLoading(true); // Set loading state to true before making API request
-    
+    setError(""); // Remove previous errors
+
     try {
       const response = await axios.get(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`
@@ -32,13 +44,20 @@ const SearchResults = () => {
       setSuggestedWords([]); // Clear suggested words if the search is successful
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // If word not found, suggest similar words
-        setSuggestedWords(["word1", "word2", "word3"]); // Replace with actual suggested words
+        // If word not found, suggest similar words from the local word list
+        const similarWords = getSimilarWords(searchTerm, wordList);
+        if (similarWords.length > 0) {
+          setSuggestedWords(similarWords.length > 5 ? similarWords.slice(0, 8) : similarWords);
+          // setSuggestedWords(similarWords);
+        } else {
+          setError("No similar words found.");
+        }
       } else {
+        setError("Error fetching search results. Please try again.");
         console.error("Error fetching search results:", error);
       }
     } finally {
-      setIsLoading(false); // diable loading state after completing API request
+      setIsLoading(false); // Disable loading state after completing API request
     }
   };
 
@@ -47,26 +66,27 @@ const SearchResults = () => {
     handleSearch();
   };
 
+  const handleChipClick = (word) => {
+    setSearchTerm(word);
+    // Scroll the user to the search bar
+    document.getElementById("search-bar").scrollIntoView({ behavior: "smooth" });
+  };
+
   const renderChips = (words, onClick) => {
     return words.map((word, index) => (
       <Chip
         size="sm"
         key={index}
-        onClick={() => onClick(word)}
-        className="text-xs smb-8 clickable px-2"
+        onClick={() => handleChipClick(word)}
+        className="text-xs smb-8 clickable px-2 cursor-pointer"
       >
         {word}
       </Chip>
     ));
   };
 
-
   return (
-    <div
-      className="flex-col w-full h-full transition-all main-hero
-    "
-    >
-    
+    <div className="flex-col w-full h-full transition-all main-hero">
       <div className="flex max-w-full h-auto" id="search-bar">
         <Input
           type="text"
@@ -77,7 +97,7 @@ const SearchResults = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           list="suggested-words"
           autoComplete="on"
-          className=" tracking-wide"
+          className="tracking-wide"
           startContent={<FaSearch className="fas fa-search mr-1" size={16} />}
         />
         <datalist id="suggested-words">
@@ -91,6 +111,21 @@ const SearchResults = () => {
         {isLoading && <Spinner color="default" className="w-full h-full justify-center align-center transition-all absolute z-100" />}
       </div>
       
+      {/* Error Message */}
+      {error && (
+        <p className="mt-4" color="error">
+          {error}
+        </p>
+      )}
+
+      {/* Suggested Words when the word was mispelled */}
+      {suggestedWords.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <p className="text-sm font-bold">Did you mean:</p>
+          {renderChips(suggestedWords, handleSuggestedWordClick)}
+        </div>
+      )}
+
       {/* Search Results Container */}
       <section className="mt-12">
         <Tabs
@@ -180,7 +215,7 @@ const SearchResults = () => {
                             key={i}
                             className="flex flex-col tracking-normal"
                           >
-                            <p className=" text-xs text-lighter">
+                            <p className="text-xs text-lighter">
                               {definition.example}
                             </p>
                           </div>
@@ -195,7 +230,7 @@ const SearchResults = () => {
         </Tabs>
       </section>
       <div>
-        {/* render daily suggestions or results for searched item */}
+        {/* Render daily suggestions or results for searched item */}
         <div className="flex flex-col gap-4 mt-16">
           <p className="text-small tracking-wide font-bold">
             Try one of these words:
