@@ -59,13 +59,13 @@ const Footer = () => {
   return (
     <>
       {isLoading && <Spinner color="default" className="w-full h-full mb-50 transition-all" />}
-      <footer className="relative w-full bg-gray-100 pt-6 px-auto flex mb-0">
+      <footer className="relative w-full bg-gray-100 pt-6 px-auto flex mb-0 mt-4">
         {showSuccessModal && <SuccessModal />}
 
-        <div className="flex-row-reverse w-full mx-auto sm:mx-6 md:mx-10 justify-between ">
+        <div className="flex-row-reverse w-full mx-auto sm:mx-6 md:mx-10 justify-between">
           <div className="w-full md:flex md:flex-row justify-between items-flex-start px-4 ">
             <div className="flex flex-col px-4 mb-8 w-auto justify-start">
-              <h2 className="text-ms font-normal mb-2">Connect with us</h2>
+              <h2 className="text-xs font-normal mb-2">Connect with us</h2>
               {/* social media buttons icon only */}
               <div gap={1} className="flex row gap-1.5 ">
                 <Button
@@ -97,7 +97,7 @@ const Footer = () => {
             {/* Middle Sign up Section */}
             <div className="flex-col sm:mt-0 px-4 grow">
               <div className="flex-col text-left sm:text-center">
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-small font-semibold">
                   Signup For Notifications!
                 </h2>
                 <p className="text-xs mb-4">
@@ -109,7 +109,7 @@ const Footer = () => {
                   onSubmit={handleSubmit}
                   className="flex w-full flex-wrap gap-6"
                 >
-                  <div className="flex xs:flex-col xl:flex-col lg:flex-col sm:flex-row row gap-4 w-full items-center justify-center ">
+                  <div className="flex-wrap center xs:flex-col xl:flex-col lg:flex-col sm:flex-row row gap-4 w-full items-center flex  align-center">
                     <Input
                       value={value}
                       type="email"
@@ -128,7 +128,7 @@ const Footer = () => {
                     {/* checki f user email is valid when button is clicked & make input red if not*/}
                     <Button
                       type="submit"
-                      className="black w-1/2 sm:w-auto md:w-auto lg:w-1/2 xl:w-1/2 2xl:w-100 sm:min-w-2/3 sm:px-8 h-10"
+                      className="black h-12 w-full sm:w-auto md:w-full lg:w-1/2 xl:w-1/2 2xl:w-100 sm:min-w-2/3 sm:px-8"
                     >
                       <FaBell size={18} className="hidden " /> Subscribe
                     </Button>

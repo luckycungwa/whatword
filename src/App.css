@@ -6,8 +6,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montagu+Slab:wght@400;700&display=swap");
 
 
-body {
+*, body {
   font-family: "Montagu Slab", serif;
+  scrollbar-width: none;
 }
 
 /* Main Responsive & lay out assit */

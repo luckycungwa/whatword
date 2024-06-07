@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Chip,} from "@nextui-org/react";
+import { Chip,} from "@nextui-org/react";
 import { generate } from "random-words";
 import ScrollToTop from "react-scroll-to-top";
 import { FaArrowUp } from "react-icons/fa";
@@ -16,9 +16,8 @@ const DailyWordList = ({ setSearchTerm }) => {
   const handleChipClick = (word) => {
     // Fill the search bar with the selected word
     setSearchTerm(word);
-
     // Scroll the user to the search bar
-    document.getElementById("search-bar").scrollIntoView({ behavior: "smooth" });
+    document.getElementById("top-section").scrollIntoView({ behavior: "smooth" });
   };
 
   const renderChips = () => {

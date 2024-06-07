@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import {
   Input,
@@ -10,19 +10,24 @@ import {
   CardBody,
   Divider,
   Spinner,
-  // Alert,
 } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
-import DailyWordList from "./DailyWordsList";   //get the random words for start suugestion
-import wordList from '../data/wordList.json'; //stores all random words for misspelling
-import levenshtein from 'js-levenshtein'; //damn i didnt know this efficient tool. damn :D
+import DailyWordList from "./DailyWordsList";
+import wordList from '../data/wordList.json';
+import levenshtein from 'js-levenshtein';
 
-// Function to get similar words using Levenshtein distance
+// Function to get similar words using Levenshtein distance and prefix match
 const getSimilarWords = (input, wordList) => {
-  const maxDistance = 3; // Maximum Levenshtein | common letter of tghe searched word
+  // const maxDistance = 2; // Maximum Levenshtein distance to consider
   const lowerInput = input.toLowerCase();
+  const prefixLength = Math.max(2, Math.floor(lowerInput.length / 2)); // Ensure prefix is at least 2 characters
+
   const words = Object.values(wordList).flat(); // Flatten the wordList to get all words
-  return words.filter(word => levenshtein(lowerInput, word.toLowerCase()) <= maxDistance);
+  const filteredWords = words.filter(word => word.toLowerCase().startsWith(lowerInput.substring(0, prefixLength)));
+  
+  // Sort by Levenshtein distance and return the top suggestions
+  const sortedWords = filteredWords.sort((a, b) => levenshtein(lowerInput, a.toLowerCase()) - levenshtein(lowerInput, b.toLowerCase()));
+  return sortedWords.slice(0, 8); // Limit to top 8 suggestions
 };
 
 const SearchResults = () => {
@@ -31,10 +36,14 @@ const SearchResults = () => {
   const [suggestedWords, setSuggestedWords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  // const [hasExamples, setHasExamples] = useState(false);
 
-  const handleSearch = async () => {
+  const inputRef = useRef(null);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
     setIsLoading(true); // Set loading state to true before making API request
-    setError(""); // Remove previous errors
+    setError(""); // Clear previous errors
 
     try {
       const response = await axios.get(
@@ -47,8 +56,7 @@ const SearchResults = () => {
         // If word not found, suggest similar words from the local word list
         const similarWords = getSimilarWords(searchTerm, wordList);
         if (similarWords.length > 0) {
-          setSuggestedWords(similarWords.length > 5 ? similarWords.slice(0, 8) : similarWords);
-          // setSuggestedWords(similarWords);
+          setSuggestedWords(similarWords);
         } else {
           setError("No similar words found.");
         }
@@ -62,14 +70,17 @@ const SearchResults = () => {
   };
 
   const handleSuggestedWordClick = (word) => {
+    // Fill the search bar with the selected word & actiavte focus the search bar
+    inputRef.current.focus();
     setSearchTerm(word);
     handleSearch();
   };
 
   const handleChipClick = (word) => {
+    inputRef.current.focus();
     setSearchTerm(word);
     // Scroll the user to the search bar
-    document.getElementById("search-bar").scrollIntoView({ behavior: "smooth" });
+    document.getElementById("top-section").scrollIntoView({ behavior: "smooth" });
   };
 
   const renderChips = (words, onClick) => {
@@ -78,6 +89,7 @@ const SearchResults = () => {
         size="sm"
         key={index}
         onClick={() => handleChipClick(word)}
+        // onClick={() => {inputRef.current.focus()}}
         className="text-xs smb-8 clickable px-2 cursor-pointer"
       >
         {word}
@@ -86,9 +98,10 @@ const SearchResults = () => {
   };
 
   return (
-    <div className="flex-col w-full h-full transition-all main-hero">
-      <div className="flex max-w-full h-auto" id="search-bar">
+    <div className="flex flex-col w-full h-auto transition-all justify-between">
+      <form onSubmit={handleSearch} className="flex xl:w-1/2 xl:mx-auto mt-4 justify-center sm:px-24 h-auto" >
         <Input
+          ref={inputRef}
           type="text"
           value={searchTerm}
           placeholder="Find a word..."
@@ -97,7 +110,7 @@ const SearchResults = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           list="suggested-words"
           autoComplete="on"
-          className="tracking-wide"
+          className="tracking-wide md:w-1/1 xl:1/2"
           startContent={<FaSearch className="fas fa-search mr-1" size={16} />}
         />
         <datalist id="suggested-words">
@@ -105,11 +118,11 @@ const SearchResults = () => {
             <option key={index} value={word} />
           ))}
         </datalist>
-        <Button className="ml-2" variant="bordered" onClick={handleSearch}>
+        <Button className="ml-2 w-1/4" variant="bordered" onClick={handleSearch}>
           Search
         </Button>
         {isLoading && <Spinner color="default" className="w-full h-full justify-center align-center transition-all absolute z-100" />}
-      </div>
+      </form>
       
       {/* Error Message */}
       {error && (
@@ -118,7 +131,7 @@ const SearchResults = () => {
         </p>
       )}
 
-      {/* Suggested Words when the word was mispelled */}
+      {/* Suggested Words when the word was misspelled */}
       {suggestedWords.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           <p className="text-sm font-bold">Did you mean:</p>
@@ -127,10 +140,10 @@ const SearchResults = () => {
       )}
 
       {/* Search Results Container */}
-      <section className="mt-12">
+      <section className="my-6">
         <Tabs
           variant="highlight"
-          placement="top"
+          // placement="top"
           className="tracking-wider font-bold"
         >
           {searchResults.map((result, index) => (
@@ -207,21 +220,28 @@ const SearchResults = () => {
                   {/* Examples Section */}
                   <div className="mt-4">
                     <Divider className="mb-4" />
-                    <h4 className="text-md mb-1 italic">Examples</h4>
-                    {result.meanings.map((meaning, idx) => (
-                      <div key={idx}>
-                        {meaning.definitions.map((definition, i) => (
-                          <div
-                            key={i}
-                            className="flex flex-col tracking-normal"
-                          >
-                            <p className="text-xs text-lighter">
-                              {definition.example}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
+                    {result.meanings.map((meaning, idx) => {
+  // Check if there are any examples, if not we don't show the titpe 'example'
+  const hasExamples = meaning.definitions.some(definition => definition.example);
+
+  return (
+    <div key={idx}>
+      {hasExamples && <h3 className="text-md mb-1 italic">Examples</h3>}
+      {meaning.definitions.map((definition, i) => (
+        <div
+          key={i}
+          className="flex flex-col tracking-normal"
+        >
+          {definition.example && ( // Conditionally render the example
+            <p className="text-xs text-lighter mb-0.5">
+              {definition.example}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+})}
                   </div>
                 </CardBody>
               </Card>
@@ -231,7 +251,7 @@ const SearchResults = () => {
       </section>
       <div>
         {/* Render daily suggestions or results for searched item */}
-        <div className="flex flex-col gap-4 mt-16">
+        <div className="flex flex-col gap-4  sm:px-24 items-center ">
           <p className="text-small tracking-wide font-bold">
             Try one of these words:
           </p>

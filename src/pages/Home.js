@@ -7,23 +7,20 @@ const Home = () => {
 
   return (
     <>
-      <div
-        className="w-full h-auto  bootom-0 flex-col gap-12 mb-0 my-container"
-        id="search-bar"
-      >
-       
-        <div className="flex-col mt-24  ">
-          <h1 className="text-5xl font-bold capitalize">Whatword?</h1>
-          <p className="text-xl tracking-widest lowercase">
-            {" "}
+      <div id="top-section" className="flex flex-col min-h-screen my-container">
+        <div className="flex flex-col items-center gap-4 mt-8 lg:mt-16  flex-grow">
+          <h1 className="text-4xl font-bold capitalize">Whatword?</h1>
+          <p className="text-sm tracking-widest lowercase">
             Your friendly dictionary
           </p>
         </div>
-        <div className="sticky sm:mx-14 max-sm:mx-8 md:mx-16  xs:mx-16 2xl:mx-24 xl:mx-24 transition-all h-auto ">
-          {/*  */}
-          <SearchResults searchTerm={searchTerm} className="flex-col flex grow justify-center h-1/2 flex-grow" />
+        <div className="w-full h-full px-4 xs:px-4 sm:px-16 md:mx-16 xs:mx-16 2xl:mx-auto xl:mx-auto flex-grow flex justify-between">
+          <SearchResults
+            searchTerm={searchTerm}
+            className="flex-col flex grow justify-center h-1/2"
+          />
         </div>
-        <div className="relative w-full">
+        <div className="w-full">
           <Footer />
         </div>
       </div>
