@@ -15,12 +15,13 @@ import { FaSearch } from "react-icons/fa";
 import DailyWordList from "./DailyWordsList";
 import wordList from "../data/wordList.json";
 import levenshtein from "js-levenshtein";
+import TextReader from "./TextReader";
 
 // Function to get similar words using Levenshtein distance and prefix match
 const getSimilarWords = (input, wordList) => {
-  // const maxDistance = 2; // Maximum Levenshtein distance to consider
+  const maxDistance = 2; // Maximum Levenshtein distance to consider
   const lowerInput = input.toLowerCase();
-  const prefixLength = Math.max(2, Math.floor(lowerInput.length / 2)); // Ensure prefix is at least 2 characters
+  const prefixLength = Math.max(maxDistance, Math.floor(lowerInput.length / 2)); // Ensure prefix is at least 2 characters
 
   const words = Object.values(wordList).flat(); // Flatten the wordList to get all words
   const filteredWords = words.filter((word) =>
@@ -33,7 +34,7 @@ const getSimilarWords = (input, wordList) => {
       levenshtein(lowerInput, a.toLowerCase()) -
       levenshtein(lowerInput, b.toLowerCase())
   );
-  return sortedWords.slice(0, 8); // Limit to top 8 suggestions
+  return sortedWords.slice(0, 8); // Limit to top 12 suggestions
 };
 
 const SearchResults = () => {
@@ -42,8 +43,7 @@ const SearchResults = () => {
   const [suggestedWords, setSuggestedWords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  // const [hasExamples, setHasExamples] = useState(false);
-
+  
   const inputRef = useRef(null);
 
   const handleSearch = async (e) => {
@@ -64,10 +64,10 @@ const SearchResults = () => {
         if (similarWords.length > 0) {
           setSuggestedWords(similarWords);
         } else {
-          setError("No similar words found.");
+          setError("No similar words found. Please search one word");
         }
       } else {
-        setError("Error fetching search results. Please try again.");
+        setError("Error fetching search results. Check internet connection & try again.");
         console.error("Error fetching search results:", error);
       }
     } finally {
@@ -85,9 +85,6 @@ const SearchResults = () => {
   const handleChipClick = (word) => {
     setSearchTerm(word);
     // Scroll the user to the search bar
-    document
-      .getElementById("top-section")
-      .scrollIntoView({ behavior: "smooth" });
     focusSearchBar();
   };
 
@@ -106,6 +103,10 @@ const SearchResults = () => {
   };
 
   const focusSearchBar = () => {
+    document
+      .getElementById("top-section")
+      .scrollIntoView({ behavior: "smooth" });
+
     inputRef.current.focus();
   };
 
@@ -140,17 +141,17 @@ const SearchResults = () => {
         >
           Search
         </Button>
-        {isLoading && (
+        
+      </form>
+{isLoading && (
           <Spinner
             color="default"
             className="w-full h-full justify-center align-center transition-all absolute z-100"
           />
         )}
-      </form>
-
       {/* Error Message */}
       {error && (
-        <p className="mt-4" color="error">
+        <p className="mt-4 color-red" color="error">
           {error}
         </p>
       )}
@@ -176,8 +177,8 @@ const SearchResults = () => {
                 <CardBody>
                   <div className="flex flex-col gap-2">
                     {result.phonetics.length > 0 && (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex row gap-2">
+                      <div className="flex flex-row gap-2 justify-between items-center">
+                        <div className="flex row gap-2 flex-wrap">
                           <p className="text-lg tracking-wider capitalize font-bold">
                             {result.word}
                           </p>
@@ -187,12 +188,14 @@ const SearchResults = () => {
                                 result.phonetics[idx - 1].text !==
                                   phonetic.text &&
                                 null}
-                              <p className="text-lg tracking-wider">
+                              <p className="text-lg tracking-wide">
                                 {phonetic.text}
                               </p>
                             </div>
                           ))}
                         </div>
+                        {/* SPeech reader */}
+                        <TextReader word={result.word} />
                       </div>
                     )}
                   </div>
@@ -286,7 +289,8 @@ const SearchResults = () => {
           </p>
           <DailyWordList
             setSearchTerm={setSearchTerm}
-            handleChipClick={focusSearchBar()}
+            handleChipClick={focusSearchBar}
+            focusSearchBar={focusSearchBar}
           />
         </div>
       </div>

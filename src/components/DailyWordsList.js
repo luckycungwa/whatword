@@ -4,7 +4,7 @@ import { generate } from "random-words";
 import ScrollToTop from "react-scroll-to-top";
 import { FaArrowUp } from "react-icons/fa";
 
-const DailyWordList = ({ setSearchTerm }) => {
+const DailyWordList = ({ setSearchTerm, focusSearchBar }) => {
   const [words, setWords] = useState([]);
 
   useEffect(() => {
@@ -18,6 +18,7 @@ const DailyWordList = ({ setSearchTerm }) => {
     setSearchTerm(word);
     // Scroll the user to the search bar
     document.getElementById("top-section").scrollIntoView({ behavior: "smooth" });
+    focusSearchBar();
   };
 
   const renderChips = () => {
