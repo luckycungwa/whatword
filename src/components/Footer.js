@@ -64,10 +64,10 @@ const Footer = () => {
 
         <div className="flex-row-reverse w-full mx-auto sm:mx-6 md:mx-10 justify-between">
           <div className="w-full md:flex md:flex-row justify-between items-flex-start px-4 ">
-            <div className="flex flex-col px-4 mb-8 w-auto justify-start">
-              <h2 className="text-xs font-normal mb-2">Connect with us</h2>
+            <div className="flex flex-col px-4 mb-8 w-auto justify-start items-center">
+              <h2 className="text-small font-normal mb-2 text-center">Connect with us</h2>
               {/* social media buttons icon only */}
-              <div gap={1} className="flex row gap-1.5 ">
+              <div gap={1} className="flex row gap-2 ">
                 <Button
                   isIconOnly
                   aria-label="Facebook"

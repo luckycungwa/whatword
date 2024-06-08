@@ -13,8 +13,8 @@ import {
 } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
 import DailyWordList from "./DailyWordsList";
-import wordList from '../data/wordList.json';
-import levenshtein from 'js-levenshtein';
+import wordList from "../data/wordList.json";
+import levenshtein from "js-levenshtein";
 
 // Function to get similar words using Levenshtein distance and prefix match
 const getSimilarWords = (input, wordList) => {
@@ -23,10 +23,16 @@ const getSimilarWords = (input, wordList) => {
   const prefixLength = Math.max(2, Math.floor(lowerInput.length / 2)); // Ensure prefix is at least 2 characters
 
   const words = Object.values(wordList).flat(); // Flatten the wordList to get all words
-  const filteredWords = words.filter(word => word.toLowerCase().startsWith(lowerInput.substring(0, prefixLength)));
-  
+  const filteredWords = words.filter((word) =>
+    word.toLowerCase().startsWith(lowerInput.substring(0, prefixLength))
+  );
+
   // Sort by Levenshtein distance and return the top suggestions
-  const sortedWords = filteredWords.sort((a, b) => levenshtein(lowerInput, a.toLowerCase()) - levenshtein(lowerInput, b.toLowerCase()));
+  const sortedWords = filteredWords.sort(
+    (a, b) =>
+      levenshtein(lowerInput, a.toLowerCase()) -
+      levenshtein(lowerInput, b.toLowerCase())
+  );
   return sortedWords.slice(0, 8); // Limit to top 8 suggestions
 };
 
@@ -71,16 +77,18 @@ const SearchResults = () => {
 
   const handleSuggestedWordClick = (word) => {
     // Fill the search bar with the selected word & actiavte focus the search bar
-    inputRef.current.focus();
     setSearchTerm(word);
+    focusSearchBar();
     handleSearch();
   };
 
   const handleChipClick = (word) => {
-    inputRef.current.focus();
     setSearchTerm(word);
     // Scroll the user to the search bar
-    document.getElementById("top-section").scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("top-section")
+      .scrollIntoView({ behavior: "smooth" });
+    focusSearchBar();
   };
 
   const renderChips = (words, onClick) => {
@@ -97,9 +105,16 @@ const SearchResults = () => {
     ));
   };
 
+  const focusSearchBar = () => {
+    inputRef.current.focus();
+  };
+
   return (
     <div className="flex flex-col w-full h-auto transition-all justify-between">
-      <form onSubmit={handleSearch} className="flex xl:w-1/2 xl:mx-auto mt-4 justify-center sm:px-24 h-auto" >
+      <form
+        onSubmit={handleSearch}
+        className="flex xl:w-1/2 xl:mx-auto mt-4 justify-center sm:px-24 h-auto"
+      >
         <Input
           ref={inputRef}
           type="text"
@@ -118,12 +133,21 @@ const SearchResults = () => {
             <option key={index} value={word} />
           ))}
         </datalist>
-        <Button className="ml-2 w-1/4" variant="bordered" onClick={handleSearch}>
+        <Button
+          className="ml-2 w-1/4"
+          variant="bordered"
+          onClick={handleSearch}
+        >
           Search
         </Button>
-        {isLoading && <Spinner color="default" className="w-full h-full justify-center align-center transition-all absolute z-100" />}
+        {isLoading && (
+          <Spinner
+            color="default"
+            className="w-full h-full justify-center align-center transition-all absolute z-100"
+          />
+        )}
       </form>
-      
+
       {/* Error Message */}
       {error && (
         <p className="mt-4" color="error">
@@ -161,7 +185,8 @@ const SearchResults = () => {
                             <div key={idx}>
                               {idx > 0 &&
                                 result.phonetics[idx - 1].text !==
-                                  phonetic.text && null}
+                                  phonetic.text &&
+                                null}
                               <p className="text-lg tracking-wider">
                                 {phonetic.text}
                               </p>
@@ -221,27 +246,31 @@ const SearchResults = () => {
                   <div className="mt-4">
                     <Divider className="mb-4" />
                     {result.meanings.map((meaning, idx) => {
-  // Check if there are any examples, if not we don't show the titpe 'example'
-  const hasExamples = meaning.definitions.some(definition => definition.example);
+                      // Check if there are any examples, if not we don't show the titpe 'example'
+                      const hasExamples = meaning.definitions.some(
+                        (definition) => definition.example
+                      );
 
-  return (
-    <div key={idx}>
-      {hasExamples && <h3 className="text-md mb-1 italic">Examples</h3>}
-      {meaning.definitions.map((definition, i) => (
-        <div
-          key={i}
-          className="flex flex-col tracking-normal"
-        >
-          {definition.example && ( // Conditionally render the example
-            <p className="text-xs text-lighter mb-0.5">
-              {definition.example}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-})}
+                      return (
+                        <div key={idx}>
+                          {hasExamples && (
+                            <h3 className="text-md mb-1 italic">Examples</h3>
+                          )}
+                          {meaning.definitions.map((definition, i) => (
+                            <div
+                              key={i}
+                              className="flex flex-col tracking-normal"
+                            >
+                              {definition.example && ( // Conditionally render the example
+                                <p className="text-xs text-lighter mb-0.5">
+                                  {definition.example}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
                   </div>
                 </CardBody>
               </Card>
@@ -255,7 +284,10 @@ const SearchResults = () => {
           <p className="text-small tracking-wide font-bold">
             Try one of these words:
           </p>
-          <DailyWordList setSearchTerm={setSearchTerm} />
+          <DailyWordList
+            setSearchTerm={setSearchTerm}
+            handleChipClick={focusSearchBar()}
+          />
         </div>
       </div>
     </div>
