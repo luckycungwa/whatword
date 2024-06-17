@@ -43,7 +43,7 @@ const SearchResults = () => {
   const [suggestedWords, setSuggestedWords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const inputRef = useRef(null);
 
   const handleSearch = async (e) => {
@@ -64,10 +64,19 @@ const SearchResults = () => {
         if (similarWords.length > 0) {
           setSuggestedWords(similarWords);
         } else {
-          setError("No similar words found. Please search one word");
+          setError(
+            <p className="text-center colo">
+              "Word Not Found. Check Spelling or try one word."
+            </p>
+          );
         }
       } else {
-        setError("Error fetching search results. Check internet connection & try again.");
+        setError(
+          <p className="text-center">
+            "Error fetching search results. Check internet connection & try
+            again."
+          </p>
+        );
         console.error("Error fetching search results:", error);
       }
     } finally {
@@ -94,8 +103,7 @@ const SearchResults = () => {
         size="sm"
         key={index}
         onClick={() => handleChipClick(word)}
-        // onClick={() => {inputRef.current.focus()}}
-        className="text-xs smb-8 clickable px-2 cursor-pointer"
+        className="text-xs clickable px-2 cursor-pointer"
       >
         {word}
       </Chip>
@@ -141,14 +149,13 @@ const SearchResults = () => {
         >
           Search
         </Button>
-        
       </form>
-{isLoading && (
-          <Spinner
-            color="default"
-            className="w-full h-full justify-center align-center transition-all absolute z-100"
-          />
-        )}
+      {isLoading && (
+        <Spinner
+          color="default"
+          className="w-full h-full justify-center align-center transition-all absolute z-100"
+        />
+      )}
       {/* Error Message */}
       {error && (
         <p className="mt-4 color-red" color="error">

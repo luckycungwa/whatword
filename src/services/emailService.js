@@ -1,67 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// services/emailService.js
+import { Resend } from 'resend';
+import '../App.css';
 
-/* install Montagu Slab serif font */
-@import url("https://fonts.googleapis.com/css2?family=Montagu+Slab:wght@400;700&display=swap");
+const resend = new Resend('re_123456789');
 
-
-*, body {
-  font-family: "Montagu Slab", serif;
-  scrollbar-width: none;
-}
-
-/* Main Responsive & lay out assit */
-.main-div {
-  width: 100vw; /* Fills viewport width */
-  height: 100vh; /* Fills viewport height */
-  display: flex; /* Enables flexbox for layout */
-  flex-direction: column; /* Stacks elements vertically */
-  justify-content: center; /* Centers elements vertically */
-  align-items: center; /* Centers elements horizontally */
-  transition: all ease-in-out 0.3s; /* Smooth transition on resize */
-}
-
-.my-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  transition: all ease-in-out 0.3s;
-}
-
-.clickable {
-  cursor: pointer; /* Change cursor to pointer */
-}
-
-.black {
-  color: white;
-  background-color: #111;
-}
-
-/* Override default button styles cause it cannot center a simple icon */
-.to-top-btn {
-  display: inline-block !important;
-  margin: 2px !important;
-  align-self: center !important;
-  right: 2px;
-  /* background-color: #111; */
-}
-
-.footer {
-  width: 100%;
-  /* height: auto; */
-  bottom: 0;
-  position: absolute;
-
-}
-
-.footer-container {
-  width: 100%;
-}
-
+export const sendVerificationEmail = async (email, verificationLink) => {
+  const emailTemplate = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
 /* email for m stuff  */
 .card {
   width: 300px;
@@ -175,3 +123,35 @@
   transition-duration: 400ms;
   transition-property: width, left;
 }
+
+    </style>
+      <title>Confirm Your Email</title>
+    </head>
+    <body>
+    <div class="card">
+      <h1>Confirm Your Subscription</h1>
+
+      <p>Thank you for subscribing to the Word of the Day!</p>
+
+      <p>Please confirm your email by clicking the button to start receiving our notifications.</p>
+      <button type="button" class="button-email" onclick="window.location.href='${verificationLink}'">Confirm Email</button>
+
+      or click link: <a class="linkBtn" href="${verificationLink}">Confirm Email</a>
+
+      <p>If you did not sign up for this, please ignore this email.</p>
+      <div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await resend.send({
+      from: 'no-reply@whatword.vercel.app',
+      to: email,
+      subject: 'Confirm Your Email Subscription',
+      html: emailTemplate,      //my ugggly template
+    });
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
