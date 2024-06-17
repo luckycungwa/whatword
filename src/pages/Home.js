@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SearchResults from "../components/SearchResults";
 import Footer from "../components/Footer";
-import emailService from "../services/emailService";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,7 +15,6 @@ const Home = () => {
           </p>
         </div>
         <div className="w-full h-full px-4 xs:px-4 sm:px-16 md:mx-16 xs:mx-16 2xl:mx-auto xl:mx-auto flex-grow flex justify-between">
-        <emailService/>
           <SearchResults
             searchTerm={searchTerm}
             className="flex-col flex grow justify-center h-1/2"

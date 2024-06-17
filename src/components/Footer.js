@@ -9,7 +9,6 @@ import {
 } from "@nextui-org/react";
 import { IoMailOutline } from "react-icons/io5";
 import {
-  FaBell,
   FaFacebookSquare,
   FaInstagram,
   FaTwitter,
