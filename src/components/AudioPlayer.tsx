@@ -39,7 +39,7 @@ export function AudioPlayer({ audioUrl, word }: AudioPlayerProps) {
           audioRef.current = new Audio(audioUrl);
           audioRef.current.addEventListener('ended', () => setIsPlaying(false));
           audioRef.current.addEventListener('error', () => {
-            useSpeechSynthesis();
+            speakWithSynthesis();
           });
         }
         await audioRef.current.play();
@@ -51,10 +51,10 @@ export function AudioPlayer({ audioUrl, word }: AudioPlayerProps) {
       }
     }
 
-    useSpeechSynthesis();
+    speakWithSynthesis();
   };
 
-  const useSpeechSynthesis = () => {
+  const speakWithSynthesis = () => {
     if (!window.speechSynthesis) {
       setError(true);
       setIsLoading(false);
