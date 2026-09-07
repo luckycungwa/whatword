@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=general-sans@300,400,500,600,700&display=swap');
+
+@layer base {
+  * {
+    border-color: #e0e0e0;
+  }
+
+  body {
+    font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
+    font-weight: 450;
+    color: #141414;
+    background: #ffffff;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'General Sans', 'Satoshi', system-ui, sans-serif;
+    font-weight: 650;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .container-app {
+    @apply mx-auto max-w-7xl px-6 sm:px-8 lg:px-12;
+  }
+
+  /* Mobbin pill button system */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#141414] px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-[#262626];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-[#e0e0e0] bg-white px-6 py-3 text-sm font-semibold text-[#141414] transition-all hover:bg-[#f3f3f3];
+  }
+
+  .btn-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#f3f3f3] px-6 py-3 text-sm font-semibold text-[#141414] transition-all hover:bg-[#e8e8e8];
+  }
+
+  /* Mobbin card system — no shadows, hairline borders */
+  .card {
+    @apply rounded-2xl border border-[#f0f0f0] bg-white p-6 transition-all;
+  }
+
+  .card-soft {
+    @apply rounded-2xl bg-[#f3f3f3] p-6;
+  }
+
+  /* Mobbin input system — field fill, no border */
+  .input-field {
+    @apply w-full rounded-2xl bg-[#f0f0f0] px-5 py-4 text-[15px] text-[#141414] transition-all placeholder:text-[#adadad] focus:outline-none focus:ring-2 focus:ring-[#141414]/10;
+  }
+
+  /* Word card */
+  .word-card {
+    @apply rounded-2xl border border-[#f0f0f0] bg-white p-5 transition-all;
+  }
+  .word-card:hover {
+    @apply border-[#e0e0e0] bg-[#f3f3f3];
+  }
+
+  /* Pill badge */
+  .badge {
+    @apply inline-flex items-center rounded-full bg-[#f3f3f3] px-3 py-1 text-xs font-semibold text-[#141414];
+  }
+
+  .badge-accent {
+    @apply inline-flex items-center rounded-full bg-[#0066ff] px-3 py-1 text-xs font-semibold text-white;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #adadad;
+}
