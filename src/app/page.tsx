@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllWords, getDailyChallenge } from '@/lib/words';
+import { getDictionaryEntries, getDailyChallenge } from '@/lib/words';
 import { SearchBar } from '@/components/SearchBar';
 import { ArrowRight } from 'lucide-react';
 
@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://whatword.co.za' },
 };
 
-export default function HomePage() {
-  const allWords = getAllWords();
-  const dailyWord = getDailyChallenge();
+export default async function HomePage() {
+  const allWords = await getDictionaryEntries();
+  const dailyWord = await getDailyChallenge();
 
   const wordLengths = [3, 4, 5, 6, 7, 8].map(len => ({
     length: len,
@@ -27,7 +27,7 @@ export default function HomePage() {
 
   const popularWords = allWords
     .filter(w => w.frequency === 'very-common')
-    .sort(() => Math.random() - 0.5)
+    .sort((a, b) => Number(Boolean(b.definitions.simple)) - Number(Boolean(a.definitions.simple)))
     .slice(0, 12);
 
   return (

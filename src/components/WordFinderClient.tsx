@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
-import { findWords, WORD_LENGTHS, type WordPattern } from '@/lib/word-finder';
+import { WORD_LENGTHS, type WordPattern, type WordFinderResult } from '@/lib/word-finder';
 import Link from 'next/link';
 
 export function WordFinderClient() {
@@ -12,8 +12,17 @@ export function WordFinderClient() {
   const [contains, setContains] = useState('');
   const [notContains, setNotContains] = useState('');
   const [pattern, setPattern] = useState('');
+  const [results, setResults] = useState<WordFinderResult[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const results = useMemo(() => {
+  useEffect(() => {
+    const hasFilters = length || startsWith || endsWith || contains || notContains || pattern;
+    if (!hasFilters) {
+      setResults([]);
+      return;
+    }
+
+    setLoading(true);
     const p: WordPattern = {};
     if (length) p.length = parseInt(length);
     if (startsWith) p.startsWith = startsWith;
@@ -21,7 +30,19 @@ export function WordFinderClient() {
     if (contains) p.contains = contains;
     if (notContains) p.notContains = notContains;
     if (pattern) p.knownLetters = pattern;
-    return findWords(p);
+
+    const params = new URLSearchParams();
+    if (p.length) params.set('length', String(p.length));
+    if (p.startsWith) params.set('startsWith', p.startsWith);
+    if (p.endsWith) params.set('endsWith', p.endsWith);
+    if (p.contains) params.set('contains', p.contains);
+    if (p.notContains) params.set('notContains', p.notContains);
+    if (p.knownLetters) params.set('knownLetters', p.knownLetters);
+
+    fetch(`/api/word-finder?${params.toString()}`)
+      .then(r => r.json())
+      .then(data => { setResults(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, [length, startsWith, endsWith, contains, notContains, pattern]);
 
   const hasFilters = length || startsWith || endsWith || contains || notContains || pattern;
@@ -33,11 +54,11 @@ export function WordFinderClient() {
     setContains('');
     setNotContains('');
     setPattern('');
+    setResults([]);
   };
 
   return (
     <div>
-      {/* Filters */}
       <div className="rounded-3xl bg-[#f3f3f3] p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div>
@@ -73,14 +94,17 @@ export function WordFinderClient() {
           <div className="mt-4 flex items-center gap-3">
             <button type="button" onClick={clearAll} className="text-xs font-medium text-[#707070] hover:text-[#141414]">Clear all</button>
             <span className="text-xs text-[#adadad]">&middot;</span>
-            <span className="text-xs text-[#707070]">{results.length} word{results.length !== 1 ? 's' : ''} found</span>
+            <span className="text-xs text-[#707070]">
+              {loading ? 'Searching...' : `${results.length} word${results.length !== 1 ? 's' : ''} found`}
+            </span>
           </div>
         )}
       </div>
 
-      {/* Results */}
       <div className="mt-6">
-        {results.length > 0 ? (
+        {loading ? (
+          <div className="rounded-3xl bg-[#f3f3f3] p-8 text-center text-[#707070]">Searching...</div>
+        ) : results.length > 0 ? (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {results.slice(0, 50).map(w => (
               <Link

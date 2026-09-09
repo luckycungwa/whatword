@@ -3,14 +3,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, XCircle, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getAllWords } from '@/lib/words';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import type { WordEntry } from '@/lib/words';
 
 const TOTAL = 10;
 
+async function fetchWords(count: number): Promise<WordEntry[]> {
+  const res = await fetch(`/api/words?type=game&count=${count}`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
 export default function DefinitionChallengePage() {
-  const [rounds, setRounds] = useState<any[]>([]);
+  const [rounds, setRounds] = useState<WordEntry[]>([]);
+  const [allWords, setAllWords] = useState<WordEntry[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [score, setScore] = useState(0);
@@ -19,8 +26,10 @@ export default function DefinitionChallengePage() {
   const [timeLeft, setTimeLeft] = useState(12);
 
   useEffect(() => {
-    const words = getAllWords().sort(() => Math.random() - 0.5).slice(0, TOTAL);
-    setRounds(words);
+    fetchWords(TOTAL).then(words => {
+      setRounds(words);
+      fetchWords(50).then(setAllWords);
+    });
   }, []);
 
   const word = rounds[current];
@@ -34,11 +43,11 @@ export default function DefinitionChallengePage() {
     return () => clearInterval(timer);
   }, [current, word, selected, finished]);
 
-  const getOptions = useCallback((correctWord: any) => {
-    const all = getAllWords().filter(w => w.slug !== correctWord.slug);
-    const wrong = all.sort(() => Math.random() - 0.5).slice(0, 3);
+  const getOptions = useCallback((correctWord: WordEntry) => {
+    const pool = allWords.length > 0 ? allWords : rounds;
+    const wrong = pool.filter(w => w.slug !== correctWord.slug).sort(() => Math.random() - 0.5).slice(0, 3);
     return [...wrong.map(w => ({ word: w.word, definition: w.definitions.simple })), { word: correctWord.word, definition: correctWord.definitions.simple }].sort(() => Math.random() - 0.5);
-  }, []);
+  }, [allWords, rounds]);
 
   const handleSelect = useCallback((option: string) => {
     if (selected) return;
@@ -53,7 +62,22 @@ export default function DefinitionChallengePage() {
     else setFinished(true);
   }, [current, rounds.length]);
 
-  if (rounds.length === 0) return null;
+  const handleRestart = () => {
+    fetchWords(TOTAL).then(words => {
+      setRounds(words);
+      setCurrent(0);
+      setSelected(null);
+      setScore(0);
+      setFinished(false);
+      setAnswers([]);
+    });
+  };
+
+  if (rounds.length === 0) return (
+    <div className="container-app py-8 md:py-12">
+      <div className="mx-auto max-w-xl text-center text-[#707070]">Loading words...</div>
+    </div>
+  );
 
   const options = word ? getOptions(word) : [];
 
@@ -70,13 +94,13 @@ export default function DefinitionChallengePage() {
         </div>
 
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#f0f0f0]">
-          <motion.div className="h-full rounded-full bg-black" animate={{ width: `${((finished ? rounds.length : current + 1) / rounds.length) * 100}%` }} />
+          <motion.div className="h-full rounded-full bg-game" animate={{ width: `${((finished ? rounds.length : current + 1) / rounds.length) * 100}%` }} />
         </div>
 
         <AnimatePresence mode="wait">
           {finished ? (
             <motion.div key="r" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 text-center">
-              <Trophy className="mx-auto mb-4 h-12 w-12 text-[#141414]" />
+              <Trophy className="mx-auto mb-4 h-12 w-12 text-game" />
               <h2 className="text-2xl font-bold text-[#141414]">Complete!</h2>
               <p className="mt-2 text-lg text-[#707070]">Score: <span className="font-bold text-[#141414]">{score}</span></p>
               <div className="mt-6 space-y-2 text-left">
@@ -87,7 +111,7 @@ export default function DefinitionChallengePage() {
                 ))}
               </div>
               <div className="mt-6 flex justify-center gap-3">
-                <button onClick={() => { setRounds(getAllWords().sort(() => Math.random() - 0.5).slice(0, TOTAL)); setCurrent(0); setSelected(null); setScore(0); setFinished(false); setAnswers([]); }} className="rounded-full bg-[#141414] px-6 py-3 text-sm font-medium text-white hover:bg-[#141414]"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
+                <button onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white hover:bg-game-dark"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
                 <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">All Games</Link>
               </div>
             </motion.div>
@@ -113,7 +137,7 @@ export default function DefinitionChallengePage() {
                   );
                 })}
               </div>
-              {selected && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-5"><button onClick={handleNext} className="w-full rounded-full bg-[#141414] py-3 text-sm font-medium text-white hover:bg-[#141414]">{current < rounds.length - 1 ? 'Next' : 'Results'}</button></motion.div>}
+              {selected && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-5"><button onClick={handleNext} className="w-full rounded-full bg-game py-3 text-sm font-medium text-white hover:bg-game-dark">{current < rounds.length - 1 ? 'Next' : 'Results'}</button></motion.div>}
             </motion.div>
           ) : null}
         </AnimatePresence>

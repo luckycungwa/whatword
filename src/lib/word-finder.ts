@@ -1,4 +1,12 @@
-import { getAllWords, type WordEntry } from './words';
+// Word Finder — compatibility layer over the Word Intelligence Engine.
+// New code should import from '@/lib/word-intelligence' directly.
+// This module preserves the existing public API (WordPattern, WordFinderResult,
+// findWords, getAnagrams, POPULAR_SEARCHES) used by pages, components and API routes.
+
+import { finderQuery, solverAnagrams, type FinderHit } from './word-intelligence/service';
+import { matchPattern as engineMatchPattern } from './word-intelligence/letter-props';
+import { canonicalKey } from './word-intelligence/normalize';
+import { getWord, type WordEntry } from './words';
 
 export interface WordPattern {
   length?: number;
@@ -6,8 +14,8 @@ export interface WordPattern {
   endsWith?: string;
   contains?: string;
   notContains?: string;
-  knownLetters?: string; // e.g. "a_p_e" where _ = unknown
-  pattern?: string; // regex-like pattern
+  knownLetters?: string;
+  pattern?: string;
 }
 
 export interface WordFinderResult {
@@ -19,113 +27,62 @@ export interface WordFinderResult {
   length: number;
 }
 
-function toResult(entry: WordEntry): WordFinderResult {
+export const matchPattern = engineMatchPattern;
+
+const definitionCache = new Map<string, WordEntry | null>();
+
+async function toResult(hit: FinderHit): Promise<WordFinderResult> {
+  let entry = definitionCache.get(hit.word);
+  if (entry === undefined) {
+    try {
+      entry = await getWord(hit.word);
+    } catch {
+      entry = null;
+    }
+    definitionCache.set(hit.word, entry);
+  }
   return {
-    word: entry.word.toLowerCase(),
-    slug: entry.slug,
-    definition: entry.definitions.simple,
-    partOfSpeech: entry.partOfSpeech,
-    difficulty: entry.difficulty,
-    length: entry.word.length,
+    word: hit.word,
+    slug: canonicalKey(hit.word),
+    definition: entry?.definitions?.simple || '',
+    partOfSpeech: entry?.partOfSpeech || hit.pos || 'noun',
+    difficulty: entry?.difficulty || 'beginner',
+    length: hit.length,
   };
 }
 
-function toResults(entries: WordEntry[]): WordFinderResult[] {
-  return entries.map(toResult);
+export async function findWords(pattern: WordPattern): Promise<WordFinderResult[]> {
+  const { hits } = await finderQuery({ ...pattern, limit: 100 });
+  const results = await Promise.all(hits.map(toResult));
+  // Defined words first — most useful for tool users.
+  results.sort((a, b) => Number(Boolean(b.definition)) - Number(Boolean(a.definition)) || a.word.localeCompare(b.word));
+  return results;
 }
 
-export function matchPattern(word: string, pattern: string): boolean {
-  if (word.length !== pattern.length) return false;
-  const lowerWord = word.toLowerCase();
-  const lowerPattern = pattern.toLowerCase();
-  for (let i = 0; i < lowerPattern.length; i++) {
-    const p = lowerPattern[i];
-    if (p !== '_' && p !== '?' && p !== lowerWord[i]) return false;
-  }
-  return true;
-}
-
-export function findWords(pattern: WordPattern): WordFinderResult[] {
-  const allWords = getAllWords();
-
-  return toResults(
-    allWords.filter((entry) => {
-      const word = entry.word.toLowerCase();
-
-      if (pattern.length !== undefined && word.length !== pattern.length) return false;
-
-      if (pattern.startsWith !== undefined) {
-        const prefix = pattern.startsWith.toLowerCase();
-        if (!word.startsWith(prefix)) return false;
-      }
-
-      if (pattern.endsWith !== undefined) {
-        const suffix = pattern.endsWith.toLowerCase();
-        if (!word.endsWith(suffix)) return false;
-      }
-
-      if (pattern.contains !== undefined) {
-        const search = pattern.contains.toLowerCase();
-        if (!word.includes(search)) return false;
-      }
-
-      if (pattern.notContains !== undefined) {
-        const excluded = pattern.notContains.toLowerCase();
-        for (const ch of excluded) {
-          if (word.includes(ch)) return false;
-        }
-      }
-
-      if (pattern.knownLetters !== undefined) {
-        if (!matchPattern(word, pattern.knownLetters)) return false;
-      }
-
-      if (pattern.pattern !== undefined) {
-        try {
-          const regex = new RegExp(pattern.pattern, 'i');
-          if (!regex.test(word)) return false;
-        } catch {
-          return false;
-        }
-      }
-
-      return true;
-    })
-  );
-}
-
-export function getWordsByLength(length: number): WordFinderResult[] {
+export async function getWordsByLength(length: number): Promise<WordFinderResult[]> {
   return findWords({ length });
 }
 
-export function getWordsStartingWith(letters: string): WordFinderResult[] {
+export async function getWordsStartingWith(letters: string): Promise<WordFinderResult[]> {
   return findWords({ startsWith: letters });
 }
 
-export function getWordsEndingWith(letters: string): WordFinderResult[] {
+export async function getWordsEndingWith(letters: string): Promise<WordFinderResult[]> {
   return findWords({ endsWith: letters });
 }
 
-export function getWordsContaining(letters: string): WordFinderResult[] {
+export async function getWordsContaining(letters: string): Promise<WordFinderResult[]> {
   return findWords({ contains: letters });
 }
 
-export function getWordsNotContaining(letters: string): WordFinderResult[] {
+export async function getWordsNotContaining(letters: string): Promise<WordFinderResult[]> {
   return findWords({ notContains: letters });
 }
 
-export function getAnagrams(word: string): WordFinderResult[] {
-  const sorted = word.toLowerCase().split('').sort().join('');
-  const allWords = getAllWords();
-
-  return toResults(
-    allWords.filter((entry) => {
-      if (entry.word.toLowerCase() === word.toLowerCase()) return false;
-      if (entry.word.length !== word.length) return false;
-      const entrySorted = entry.word.toLowerCase().split('').sort().join('');
-      return entrySorted === sorted;
-    })
-  );
+/** Anagram solver — full-corpus signature matching via the intelligence engine. */
+export async function getAnagrams(word: string): Promise<WordFinderResult[]> {
+  const hits = await solverAnagrams(word, 50);
+  return Promise.all(hits.map(toResult));
 }
 
 export const WORD_LENGTHS: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
@@ -136,70 +93,19 @@ export interface PopularSearch {
 }
 
 export const POPULAR_SEARCHES: PopularSearch[] = [
-  {
-    label: '5 letter words',
-    pattern: { length: 5 },
-  },
-  {
-    label: '6 letter words',
-    pattern: { length: 6 },
-  },
-  {
-    label: '7 letter words',
-    pattern: { length: 7 },
-  },
-  {
-    label: '8 letter words',
-    pattern: { length: 8 },
-  },
-  {
-    label: 'Words starting with S',
-    pattern: { startsWith: 'S' },
-  },
-  {
-    label: 'Words starting with P',
-    pattern: { startsWith: 'P' },
-  },
-  {
-    label: 'Words starting with E',
-    pattern: { startsWith: 'E' },
-  },
-  {
-    label: 'Words ending with -tion',
-    pattern: { endsWith: 'tion' },
-  },
-  {
-    label: 'Words ending with -ly',
-    pattern: { endsWith: 'ly' },
-  },
-  {
-    label: 'Words ending with -ing',
-    pattern: { endsWith: 'ing' },
-  },
-  {
-    label: 'Words containing "act"',
-    pattern: { contains: 'act' },
-  },
-  {
-    label: 'Words containing "ment"',
-    pattern: { contains: 'ment' },
-  },
-  {
-    label: 'Words containing "graph"',
-    pattern: { contains: 'graph' },
-  },
-  {
-    label: 'Short words (2-3 letters)',
-    pattern: { pattern: '^.{2,3}$' },
-  },
-  {
-    label: 'Long words (10+ letters)',
-    pattern: { pattern: '^.{10,}$' },
-  },
-  {
-    label: 'Words with double letters',
-    pattern: { pattern: '(.)\\1' },
-  },
+  { label: '5 letter words', pattern: { length: 5 } },
+  { label: '6 letter words', pattern: { length: 6 } },
+  { label: '7 letter words', pattern: { length: 7 } },
+  { label: '8 letter words', pattern: { length: 8 } },
+  { label: 'Words starting with S', pattern: { startsWith: 'S' } },
+  { label: 'Words starting with P', pattern: { startsWith: 'P' } },
+  { label: 'Words starting with E', pattern: { startsWith: 'E' } },
+  { label: 'Words ending with -tion', pattern: { endsWith: 'tion' } },
+  { label: 'Words ending with -ly', pattern: { endsWith: 'ly' } },
+  { label: 'Words ending with -ing', pattern: { endsWith: 'ing' } },
+  { label: 'Words containing "act"', pattern: { contains: 'act' } },
+  { label: 'Words containing "ment"', pattern: { contains: 'ment' } },
+  { label: 'Words with double letters', pattern: { pattern: '(.)\\1' } },
 ];
 
 export function getPopularSearches(): PopularSearch[] {

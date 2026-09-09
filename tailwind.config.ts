@@ -25,6 +25,21 @@ const config: Config = {
         muted: '#707070',
         faint: '#adadad',
         accent: '#0066ff',
+        game: {
+          DEFAULT: '#7c3aed',
+          light: '#ede9fe',
+          lighter: '#f5f3ff',
+          dark: '#5b21b6',
+          'washed-light': '#faf5ff',
+          'washed': '#f0e5ff',
+        },
+        'game-accent': {
+          yellow: '#fbbf24',
+          green: '#34d399',
+          blue: '#60a5fa',
+          pink: '#f472b6',
+          red: '#f87171',
+        },
       },
       fontFamily: {
         sans: ['Satoshi', 'system-ui', '-apple-system', 'sans-serif'],
@@ -37,6 +52,7 @@ const config: Config = {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.4s ease-out',
+        'pulse-gentle': 'pulseGentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
         fadeIn: {
@@ -46,6 +62,10 @@ const config: Config = {
         slideUp: {
           '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseGentle: {
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '1' },
         },
       },
     },

@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:intelligence": "tsx --test tests/word-intelligence.test.ts",
+    "ingest:esdb": "node scripts/ingest-esdb.mjs",
+    "enrich:dict": "node scripts/enrich-freedictionary.mjs"
   },
   "engines": {
     "node": ">=18"
@@ -29,6 +32,7 @@
     "eslint-config-next": "^14.1.0",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.13",
     "typescript": "^5.3.3"
   }
 }

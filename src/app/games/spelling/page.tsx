@@ -3,14 +3,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, XCircle, RotateCcw, Trophy, Timer, Volume2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getAllWords } from '@/lib/words';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import type { WordEntry } from '@/lib/words';
 
 const TOTAL = 10;
 
+async function fetchWords(): Promise<WordEntry[]> {
+  const res = await fetch(`/api/words?type=game&count=${TOTAL}`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
 export default function SpellingPage() {
-  const [rounds, setRounds] = useState<any[]>([]);
+  const [rounds, setRounds] = useState<WordEntry[]>([]);
   const [current, setCurrent] = useState(0);
   const [input, setInput] = useState('');
   const [score, setScore] = useState(0);
@@ -21,8 +27,7 @@ export default function SpellingPage() {
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
-    const words = getAllWords().sort(() => Math.random() - 0.5).slice(0, TOTAL);
-    setRounds(words);
+    fetchWords().then(setRounds);
   }, []);
 
   const word = rounds[current];
@@ -76,7 +81,11 @@ export default function SpellingPage() {
     return w[0] + '_'.repeat(w.length - 2) + w[w.length - 1];
   };
 
-  if (rounds.length === 0) return null;
+  if (rounds.length === 0) return (
+    <div className="container-app py-8 md:py-12">
+      <div className="mx-auto max-w-xl text-center text-[#707070]">Loading words...</div>
+    </div>
+  );
 
   return (
     <div className="container-app py-8 md:py-12">
@@ -93,7 +102,7 @@ export default function SpellingPage() {
         <AnimatePresence mode="wait">
           {finished ? (
             <motion.div key="r" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 text-center">
-              <Trophy className="mx-auto mb-4 h-12 w-12 text-[#141414]" />
+              <Trophy className="mx-auto mb-4 h-12 w-12 text-game" />
               <h2 className="text-2xl font-bold text-[#141414]">Complete!</h2>
               <p className="mt-2 text-lg text-[#707070]">Score: <span className="font-bold text-[#141414]">{score}</span></p>
               <div className="mt-6 space-y-2 text-left">
@@ -108,7 +117,7 @@ export default function SpellingPage() {
                 ))}
               </div>
               <div className="mt-6 flex justify-center gap-3">
-                <button onClick={() => { const w = getAllWords().sort(() => Math.random() - 0.5).slice(0, TOTAL); setRounds(w); setCurrent(0); setInput(''); setScore(0); setFinished(false); setAnswers([]); setShowHint(false); setSelected(null); }} className="rounded-full bg-[#141414] px-6 py-3 text-sm font-medium text-white hover:bg-[#141414]"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
+                <button onClick={() => { fetchWords().then(w => { setRounds(w); setCurrent(0); setInput(''); setScore(0); setFinished(false); setAnswers([]); setShowHint(false); setSelected(null); }); }} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white hover:bg-game-dark"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
                 <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">All Games</Link>
               </div>
             </motion.div>
@@ -119,12 +128,12 @@ export default function SpellingPage() {
                 <span className={`flex items-center gap-1 text-sm font-medium ${timeLeft <= 10 ? 'text-red-500' : 'text-[#707070]'}`}><Timer className="h-4 w-4" />{timeLeft}s</span>
               </div>
 
-              <div className="mb-6 rounded-2xl border border-[#f0f0f0] bg-[#f3f3f3] p-8 text-center">
-                <button onClick={playAudio} className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#e0e0e0] transition-colors hover:bg-[#e0e0e0]">
-                  <Volume2 className="h-8 w-8 text-black" />
+              <div className="mb-6 rounded-2xl border border-game/20 bg-game-light p-8 text-center">
+                <button onClick={playAudio} className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-game/10 transition-colors hover:bg-game/20">
+                  <Volume2 className="h-8 w-8 text-game" />
                 </button>
                 <p className="mt-3 text-sm text-[#707070]">Click to hear the word</p>
-                {showHint && <p className="mt-2 text-lg font-mono font-bold text-black">{getHint()}</p>}
+                {showHint && <p className="mt-2 text-lg font-mono font-bold text-game-dark">{getHint()}</p>}
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -134,7 +143,7 @@ export default function SpellingPage() {
                 <div className="flex gap-3">
                   <button type="button" onClick={() => setShowHint(true)} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">Hint</button>
                   <button type="button" onClick={playAudio} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]"><Volume2 className="h-4 w-4" /></button>
-                  <button type="submit" className="flex-1 rounded-full bg-[#141414] py-3 text-sm font-medium text-white hover:bg-[#141414]">Submit</button>
+                  <button type="submit" className="flex-1 rounded-full bg-game py-3 text-sm font-medium text-white hover:bg-game-dark">Submit</button>
                 </div>
               </form>
             </motion.div>
