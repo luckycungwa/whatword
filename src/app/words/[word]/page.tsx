@@ -16,8 +16,13 @@ export async function generateMetadata({ params }: WordPageProps): Promise<Metad
   const word = getWordBySlug(slug);
   if (!word) return { title: 'Word Not Found' };
 
+  const isThin = word.definitions.simple.includes('A common English word meaning related to') ||
+    word.definitions.simple.length < 5;
+
   const title = `${word.word} — Definition, Pronunciation & Etymology`;
-  const description = `Learn the meaning of "${word.word}" (${word.phonetic}). Explore its definition, pronunciation, etymology, usage examples, synonyms, and test your knowledge with an interactive quiz.`;
+  const description = isThin
+    ? `Look up "${word.word}" in the WhatWord English dictionary.`
+    : `Learn the meaning of "${word.word}" (${word.phonetic}). Explore its definition, pronunciation, etymology, usage examples, synonyms, and test your knowledge with an interactive quiz.`;
   const url = `https://whatword.co.za/words/${slug}`;
 
   return {
@@ -33,11 +38,11 @@ export async function generateMetadata({ params }: WordPageProps): Promise<Metad
     ],
     openGraph: {
       title, description, url, siteName: 'WhatWord', type: 'article', locale: 'en_ZA',
-      images: [{ url: `/og/words/${slug}.png`, width: 1200, height: 630, alt: `${word.word} — WhatWord` }],
+      images: [{ url: 'https://whatword.co.za/black-logo.png', width: 512, height: 512, alt: `${word.word} — WhatWord` }],
     },
     twitter: { card: 'summary_large_image', title, description },
     alternates: { canonical: url },
-    robots: { index: true, follow: true },
+    robots: { index: !isThin, follow: true },
   };
 }
 

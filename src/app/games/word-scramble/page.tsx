@@ -124,7 +124,7 @@ export default function WordScramblePage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Type the word..."
                   className="w-full rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3.5 text-center text-lg font-medium text-[#141414] placeholder:text-[#adadad] focus:border-[#141414] focus:outline-none focus:ring-2 focus:ring-[#141414]/20"
-                  autoFocus autoComplete="off" />
+                  autoFocus autoComplete="off" aria-label="Type the unscrambled word" />
                 <div className="flex gap-3">
                   <button type="button" onClick={handleHint} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">Hint</button>
                   <button type="submit" className="flex-1 rounded-full bg-[#141414] py-3 text-sm font-medium text-white hover:bg-[#141414]">Submit</button>
