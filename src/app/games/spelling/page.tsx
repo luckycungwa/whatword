@@ -36,20 +36,20 @@ export default function SpellingPage() {
     return () => clearInterval(timer);
   }, [current, word, finished]);
 
-  useEffect(() => {
-    if (timeLeft === 0 && word && !selected) {
-      handleTimeout();
-    }
-  }, [timeLeft, word, selected]);
-
-  const handleTimeout = () => {
+  const handleTimeout = useCallback(() => {
     setSelected('TIMEOUT');
-    setAnswers(a => [...a, { correct: false, word: word.word, userAnswer: '' }]);
+    setAnswers(a => [...a, { correct: false, word: word!.word, userAnswer: '' }]);
     setInput('');
     setShowHint(false);
     if (current < rounds.length - 1) { setCurrent(c => c + 1); setSelected(null); }
     else setFinished(true);
-  };
+  }, [word, current, rounds.length]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && word && !selected) {
+      handleTimeout();
+    }
+  }, [timeLeft, word, selected, handleTimeout]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

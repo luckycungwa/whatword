@@ -27,13 +27,13 @@ export const metadata: Metadata = {
     title: 'WhatWord — Interactive English Dictionary, Word Finder & Vocabulary Games',
     description:
       'Search English words, find words by pattern, build vocabulary with quizzes, and play daily word games.',
-    images: [{ url: 'https://whatword.co.za/og-image.png', width: 1200, height: 630, alt: 'WhatWord — Word Utility Platform' }],
+    images: [{ url: 'https://whatword.co.za/black-logo.png', width: 512, height: 512, alt: 'WhatWord — Word Utility Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'WhatWord — Interactive English Dictionary, Word Finder & Vocabulary Games',
     description: 'Search words, find patterns, build vocabulary, play games.',
-    images: ['https://whatword.co.za/og-image.png'],
+    images: ['https://whatword.co.za/black-logo.png'],
     site: '@whatword',
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
