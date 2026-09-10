@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllWords } from '@/lib/words';
+import { getDictionaryEntries } from '@/lib/words';
 
 export async function GET(request: NextRequest) {
   const type = request.nextUrl.searchParams.get('type') || 'random';
   const count = parseInt(request.nextUrl.searchParams.get('count') || '10');
 
-  const allWords = await getAllWords();
+  const allWords = await getDictionaryEntries();
   if (allWords.length === 0) {
     return NextResponse.json([]);
   }

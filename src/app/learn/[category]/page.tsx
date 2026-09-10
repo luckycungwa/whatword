@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { getAllWords, getWordsByDifficulty, getWordsByLevel, categories } from '@/lib/words';
+import { getDictionaryEntries, categories } from '@/lib/words';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 interface Props {
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LearnCategoryPage({ params }: Props) {
   const { category } = await params;
-  const allWords = await getAllWords();
+  const allWords = await getDictionaryEntries();
 
   const isLevel = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'].includes(category);
   const isDifficulty = ['beginner', 'intermediate', 'advanced'].includes(category);

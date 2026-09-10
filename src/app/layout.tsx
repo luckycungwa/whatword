@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { NavigationProgress } from '@/components/NavigationProgress';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://whatword.co.za'),
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       </head>
       <body className="flex min-h-screen flex-col bg-[#ffffff] text-[#141414] antialiased">
+        <NavigationProgress />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

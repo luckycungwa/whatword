@@ -1,7 +1,7 @@
 ﻿import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { getAllWords, categories, getWordsByDifficulty, getWordsByLevel } from '@/lib/words';
+import { getDictionaryEntries, categories } from '@/lib/words';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ const levels = [
 ];
 
 export default async function LearnPage() {
-  const allWords = await getAllWords();
+  const allWords = await getDictionaryEntries();
 
   return (
     <div className="container-app py-8 md:py-12">

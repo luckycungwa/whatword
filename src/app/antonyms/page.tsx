@@ -1,7 +1,7 @@
 ﻿import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { getAllWords } from '@/lib/words';
+import { getDictionaryEntries } from '@/lib/words';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AntonymsPage() {
-  const words = await getAllWords();
+  const words = await getDictionaryEntries();
   const wordsWithAntonyms = words.filter(w => w.antonyms.length > 0);
 
   return (
