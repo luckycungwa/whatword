@@ -14,12 +14,12 @@ export default function WordFinderPage() {
   const popularSearches = getPopularSearches();
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Word Finder' }]} />
 
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold text-[#141414] sm:text-4xl">Word Finder</h1>
-        <p className="mt-3 text-lg text-[#707070]">
+        <h1 className="text-balance text-3xl font-bold leading-tight text-[#141414] sm:text-4xl">Word Finder</h1>
+        <p className="mt-3 text-pretty text-[17px] leading-6 text-[#707070] sm:text-lg sm:leading-7">
           Find words by length, starting letter, pattern, or known letters.
         </p>
       </div>

@@ -59,43 +59,43 @@ export function WordFinderClient() {
 
   return (
     <div>
-      <div className="rounded-3xl bg-[#f3f3f3] p-6">
+      <div className="rounded-3xl bg-[#f3f3f3] p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-[#707070]">Word Length</label>
-            <select value={length} onChange={e => setLength(e.target.value)} className="input-field !py-2.5 !text-sm">
+            <label htmlFor="wf-length" className="mb-1.5 block text-xs font-semibold text-[#707070]">Word Length</label>
+            <select id="wf-length" value={length} onChange={e => setLength(e.target.value)} className="input-field !py-2.5 !text-sm">
               <option value="">Any length</option>
               {WORD_LENGTHS.map(l => <option key={l} value={l}>{l} letters</option>)}
             </select>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-[#707070]">Starts With</label>
-            <input type="text" value={startsWith} onChange={e => setStartsWith(e.target.value.toLowerCase())} placeholder="e.g. pre" className="input-field !py-2.5 !text-sm" />
+            <label htmlFor="wf-starts" className="mb-1.5 block text-xs font-semibold text-[#707070]">Starts With</label>
+            <input id="wf-starts" type="text" value={startsWith} onChange={e => setStartsWith(e.target.value.toLowerCase())} placeholder="e.g. pre" className="input-field !py-2.5 !text-sm" />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-[#707070]">Ends With</label>
-            <input type="text" value={endsWith} onChange={e => setEndsWith(e.target.value.toLowerCase())} placeholder="e.g. tion" className="input-field !py-2.5 !text-sm" />
+            <label htmlFor="wf-ends" className="mb-1.5 block text-xs font-semibold text-[#707070]">Ends With</label>
+            <input id="wf-ends" type="text" value={endsWith} onChange={e => setEndsWith(e.target.value.toLowerCase())} placeholder="e.g. tion" className="input-field !py-2.5 !text-sm" />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-[#707070]">Contains</label>
-            <input type="text" value={contains} onChange={e => setContains(e.target.value.toLowerCase())} placeholder="e.g. que" className="input-field !py-2.5 !text-sm" />
+            <label htmlFor="wf-contains" className="mb-1.5 block text-xs font-semibold text-[#707070]">Contains</label>
+            <input id="wf-contains" type="text" value={contains} onChange={e => setContains(e.target.value.toLowerCase())} placeholder="e.g. que" className="input-field !py-2.5 !text-sm" />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-[#707070]">Does Not Contain</label>
-            <input type="text" value={notContains} onChange={e => setNotContains(e.target.value.toLowerCase())} placeholder="e.g. x" className="input-field !py-2.5 !text-sm" />
+            <label htmlFor="wf-notcontains" className="mb-1.5 block text-xs font-semibold text-[#707070]">Does Not Contain</label>
+            <input id="wf-notcontains" type="text" value={notContains} onChange={e => setNotContains(e.target.value.toLowerCase())} placeholder="e.g. x" className="input-field !py-2.5 !text-sm" />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-[#707070]">Pattern (use _ for unknown)</label>
-            <input type="text" value={pattern} onChange={e => setPattern(e.target.value.toLowerCase())} placeholder="e.g. a_p_e" className="input-field !py-2.5 !text-sm" />
+            <label htmlFor="wf-pattern" className="mb-1.5 block text-xs font-semibold text-[#707070]">Pattern (use _ for unknown)</label>
+            <input id="wf-pattern" type="text" value={pattern} onChange={e => setPattern(e.target.value.toLowerCase())} placeholder="e.g. a_p_e" className="input-field !py-2.5 !text-sm" />
           </div>
         </div>
 
         {hasFilters && (
-          <div className="mt-4 flex items-center gap-3">
-            <button type="button" onClick={clearAll} className="text-xs font-medium text-[#707070] hover:text-[#141414]">Clear all</button>
-            <span className="text-xs text-[#adadad]">&middot;</span>
-            <span className="text-xs text-[#707070]">
-              {loading ? 'Searching...' : `${results.length} word${results.length !== 1 ? 's' : ''} found`}
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button type="button" onClick={clearAll} className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#707070] transition-colors hover:text-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">Clear all</button>
+            <span className="text-xs text-[#adadad]" aria-hidden="true">&middot;</span>
+            <span className="text-xs text-[#707070]" role="status" aria-live="polite">
+              {loading ? 'Searching…' : `${results.length} word${results.length !== 1 ? 's' : ''} found`}
             </span>
           </div>
         )}

@@ -33,12 +33,12 @@ export default async function WordsPage() {
   };
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Dictionary' }]} />
 
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold text-[#141414] sm:text-4xl">English Dictionary</h1>
-        <p className="mt-3 text-lg text-[#707070]">
+        <h1 className="text-balance text-3xl font-bold leading-tight text-[#141414] sm:text-4xl">English Dictionary</h1>
+        <p className="mt-3 text-pretty text-[17px] leading-6 text-[#707070] sm:text-lg sm:leading-7">
           {stats.total > 0
             ? <>Search {stats.total.toLocaleString()} words in the graph{stats.verified > 0 && <> — {stats.verified.toLocaleString()} with verified definitions</>}.</>
             : <>Type any word above to look it up. Every word is fetched live from the dictionary.</>

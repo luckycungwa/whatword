@@ -23,12 +23,12 @@ export default async function LearnPage() {
   const allWords = await getDictionaryEntries();
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Learn' }]} />
 
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold text-[#141414] sm:text-4xl">Vocabulary Builder</h1>
-        <p className="mt-3 text-lg text-[#707070]">Learn English words organised by difficulty level and category.</p>
+        <h1 className="text-balance text-3xl font-bold leading-tight text-[#141414] sm:text-4xl">Vocabulary Builder</h1>
+        <p className="mt-3 text-pretty text-[17px] leading-6 text-[#707070] sm:text-lg sm:leading-7">Learn English words organised by difficulty level and category.</p>
       </div>
 
       <div className="mt-10">

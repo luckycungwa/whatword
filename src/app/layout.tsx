@@ -69,10 +69,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       </head>
-      <body className="flex min-h-screen flex-col bg-[#ffffff] text-[#141414] antialiased">
+      <body className="flex min-h-screen flex-col bg-[#faf8f2] text-[#141414] antialiased">
+        <a
+          href="#main-content"
+          className="sr-only z-[100] rounded-full bg-[#141414] px-4 py-2 text-sm font-medium text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:outline-none focus:ring-2 focus:ring-[#0066ff]"
+        >
+          Skip to content
+        </a>
         <NavigationProgress />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1 pt-[76px] sm:pt-[80px]">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

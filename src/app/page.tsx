@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getDictionaryEntries, getDailyChallenge } from '@/lib/words';
 import { SearchBar } from '@/components/SearchBar';
+import { AuraBackground } from '@/components/AuraBackground';
 import { ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -31,24 +32,24 @@ export default async function HomePage() {
     .slice(0, 12);
 
   return (
-    <>
-      {/* Hero — content-first, generous whitespace */}
-      <section className="relative pt-32 pb-16 sm:pt-44 sm:pb-24">
+    <AuraBackground>
+      {/* Hero — generous whitespace, no extra top pad (layout handles fixed header) */}
+      <section className="relative pb-12 pt-6 sm:pb-16 sm:pt-10 lg:pb-20 lg:pt-12">
         <div className="container-app">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#f3f3f3] px-4 py-2 text-sm font-medium text-[#707070]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-xs font-semibold tracking-wide text-[#707070] shadow-sm backdrop-blur sm:text-sm">
               {allWords.length.toLocaleString()} words indexed
             </div>
-            <h1 className="font-display text-5xl font-bold tracking-tight text-[#141414] sm:text-7xl">
+            <h1 className="text-balance font-display text-[2.5rem] font-bold leading-none tracking-tight text-[#141414] sm:text-6xl lg:text-7xl">
               What<span className="text-[#0066ff]">Word</span>?
             </h1>
-            <p className="mt-5 text-lg text-[#707070] sm:text-xl">
+            <p className="mx-auto mt-4 max-w-xl text-pretty text-[17px] leading-6 text-[#707070] sm:mt-5 sm:text-xl sm:leading-7">
               Definitions, pronunciation, word finder, and games. Your complete English dictionary.
             </p>
           </div>
 
-          {/* Search — field fill style */}
-          <div className="mt-10">
+          {/* Search — unified field */}
+          <div className="mt-8 sm:mt-10">
             <SearchBar />
           </div>
         </div>
@@ -152,6 +153,6 @@ export default async function HomePage() {
           </p>
         </div>
       </section>
-    </>
+    </AuraBackground>
   );
 }

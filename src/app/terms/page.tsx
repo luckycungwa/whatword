@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="container-app py-16">
+    <div className="container-app pb-10 pt-6 sm:pb-12">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/"

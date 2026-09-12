@@ -15,11 +15,11 @@ export default async function AntonymsPage() {
   const wordsWithAntonyms = words.filter(w => w.antonyms.length > 0);
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Antonyms' }]} />
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold text-[#141414] sm:text-4xl">Antonyms Explorer</h1>
-        <p className="mt-3 text-lg text-[#707070]">Find words with opposite meanings. Search any word for antonyms.</p>
+        <h1 className="text-balance text-3xl font-bold leading-tight text-[#141414] sm:text-4xl">Antonyms Explorer</h1>
+        <p className="mt-3 text-pretty text-[17px] leading-6 text-[#707070] sm:text-lg sm:leading-7">Find words with opposite meanings. Search any word for antonyms.</p>
       </div>
 
       {wordsWithAntonyms.length > 0 ? (

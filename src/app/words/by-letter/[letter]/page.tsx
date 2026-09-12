@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { finderQuery } from '@/lib/word-intelligence/service';
 import { listPageDecision } from '@/lib/word-intelligence/seo-score';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export const dynamic = 'force-dynamic';
 
@@ -106,17 +107,11 @@ export default async function StartingWithPage({ params }: { params: Promise<{ l
   const ctx = getLetterContext(letter);
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbs(letter)) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(getFAQSchema(letter, total)) }} />
 
-      <nav className="text-xs text-[#adadad] mb-6" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-[#707070]">Home</Link>
-        <span className="mx-1">/</span>
-        <Link href="/words" className="hover:text-[#707070]">Words</Link>
-        <span className="mx-1">/</span>
-        <span className="text-[#707070]">Starting with {letter.toUpperCase()}</span>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Words', href: '/words' }, { label: `Starting with ${letter.toUpperCase()}` }]} />
 
       <div className="mx-auto max-w-3xl">
         <h1 className="font-display text-3xl font-bold text-[#141414] sm:text-4xl">

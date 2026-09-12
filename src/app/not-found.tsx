@@ -15,7 +15,7 @@ export default function NotFound() {
       <div className="mt-8 flex items-center gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-full bg-[#141414] px-6 py-3 font-medium text-white transition-colors hover:bg-[#141414]"
+          className="inline-flex items-center gap-2 rounded-full bg-[#141414] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#262626] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home

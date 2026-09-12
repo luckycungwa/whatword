@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useCallback, useEffect } from 'react';
 import { CheckCircle2, XCircle, RotateCcw, Trophy, Timer } from 'lucide-react';
@@ -115,7 +115,7 @@ export default function WhatWordGame() {
   }, []);
 
   if (rounds.length === 0) return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Games', href: '/games' }, { label: 'WhatWord Challenge' }]} />
       
       <div className="mx-auto max-w-xl">
@@ -142,7 +142,7 @@ export default function WhatWordGame() {
   );
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Games', href: '/games' }, { label: 'WhatWord Challenge' }]} />
 
       <div className="mx-auto max-w-xl">

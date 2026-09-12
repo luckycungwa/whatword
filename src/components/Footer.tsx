@@ -35,7 +35,7 @@ export function Footer() {
   return (
     <footer className="mt-20 rounded-t-3xl bg-[#141414]">
       <div className="container-app py-16">
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10">
           {/* Brand */}
           <div className="col-span-2 sm:col-span-1">
             <Link href="/" className="text-xl font-bold text-white">

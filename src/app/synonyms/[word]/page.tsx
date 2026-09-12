@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+﻿import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getWord } from '@/lib/words';
@@ -26,7 +26,7 @@ export default async function SynonymWordPage({ params }: Props) {
   if (!word) notFound();
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Synonyms', href: '/synonyms' }, { label: word.word }]} />
       <div className="mx-auto max-w-3xl">
         <h1 className="text-3xl font-bold text-[#141414]">

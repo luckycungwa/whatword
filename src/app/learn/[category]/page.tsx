@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+﻿import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getDictionaryEntries, categories } from '@/lib/words';
@@ -41,7 +41,7 @@ export default async function LearnCategoryPage({ params }: Props) {
   }
 
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Learn', href: '/learn' }, { label: title }]} />
       <div className="mx-auto max-w-2xl">
         <h1 className="text-3xl font-bold text-[#141414] sm:text-4xl">{title}</h1>

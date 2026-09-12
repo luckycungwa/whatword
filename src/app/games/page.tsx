@@ -1,14 +1,14 @@
-﻿import { Metadata } from 'next';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Lightbulb, Brain, Zap, SpellCheck, Trophy, Gamepad2 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
-  title: 'Word Games — Play Vocabulary Quizzes & Word Puzzles',
+  title: 'Word Games � Play Vocabulary Quizzes & Word Puzzles',
   description: 'Play interactive word games to build vocabulary. Challenge yourself with definition quizzes, word scrambles, and spelling challenges.',
   alternates: { canonical: 'https://whatword.co.za/games' },
   openGraph: {
-    title: 'Word Games — Play Vocabulary Quizzes & Word Puzzles',
+    title: 'Word Games � Play Vocabulary Quizzes & Word Puzzles',
     description: 'Play interactive word games to build vocabulary. Definition quizzes, word scrambles, and spelling challenges.',
     url: 'https://whatword.co.za/games',
   },
@@ -51,7 +51,7 @@ const games = [
 
 export default function GamesPage() {
   return (
-    <div className="container-app py-8 md:py-12">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Games' }]} />
 
       <div className="mx-auto max-w-2xl text-center">
@@ -110,10 +110,10 @@ export default function GamesPage() {
       </div>
 
       {/* Daily Challenge Section */}
-      <div className="mt-12 overflow-hidden rounded-2xl border border-game/20 bg-gradient-to-br from-game-washed-light via-white to-game/5 p-8 text-center transition-all duration-300 hover:border-game/40 hover:shadow-lg hover:shadow-game/10">
+      <div className="relative mt-12 overflow-hidden rounded-2xl border border-game/20 bg-gradient-to-br from-game-washed-light via-white to-game/5 p-8 text-center transition-all duration-300 hover:border-game/40 hover:shadow-lg hover:shadow-game/10">
         {/* Decorative elements */}
-        <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-game/5 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-game/5 blur-3xl" />
+        <div className="pointer-events-none absolute -top-20 -right-20 h-40 w-40 rounded-full bg-game/5 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-game/5 blur-3xl" aria-hidden="true" />
 
         <div className="relative z-10">
           <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-game-light">

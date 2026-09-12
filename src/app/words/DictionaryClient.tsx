@@ -69,23 +69,30 @@ export default function DictionaryClient({ words }: { words: DictionaryRow[] }) 
 
   return (
     <div>
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#adadad]" />
+      {/* Search — flex bar with centered action, matches global SearchBar rhythm */}
+      <div className="flex items-center gap-2 rounded-2xl bg-[#f0f0f0] px-2 py-2">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#adadad] shadow-sm" aria-hidden="true">
+          <Search className="h-4 w-4" />
+        </span>
         <input
           type="text"
           value={search}
           onChange={e => { setSearch(e.target.value); setPage(0); }}
           placeholder="Search words or definitions..."
-          className="w-full rounded-2xl border border-[#e0e0e0] bg-[#f0f0f0] py-3 pl-11 pr-10 text-sm text-[#141414] outline-none transition-colors placeholder:text-[#adadad] focus:border-[#0066ff]"
+          className="min-w-0 flex-1 bg-transparent py-2 text-[15px] text-[#141414] placeholder:text-[#adadad] focus:outline-none"
+          aria-label="Filter words"
         />
-        {search && (
+        {search ? (
           <button
+            type="button"
             onClick={() => { setSearch(''); setPage(0); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#adadad] hover:bg-[#e0e0e0] hover:text-[#141414]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[#adadad] transition-colors hover:bg-white hover:text-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20"
+            aria-label="Clear filter"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
+        ) : (
+          <span className="w-10 shrink-0" aria-hidden="true" />
         )}
       </div>
 
@@ -192,19 +199,21 @@ export default function DictionaryClient({ words }: { words: DictionaryRow[] }) 
       {totalPages > 1 && (
         <div className="mt-8 flex items-center justify-center gap-2">
           <button
+            type="button"
             onClick={() => setPage(p => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="rounded-full bg-[#f3f3f3] px-4 py-2 text-sm font-medium text-[#707070] transition-colors hover:bg-[#e0e0e0] disabled:opacity-40"
+            className="rounded-full bg-[#f3f3f3] px-4 py-2 text-sm font-medium text-[#707070] transition-colors hover:bg-[#e0e0e0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Previous
           </button>
-          <span className="px-4 text-sm text-[#707070]">
+          <span className="px-4 text-sm tabular-nums text-[#707070]">
             Page {page + 1} of {totalPages}
           </span>
           <button
+            type="button"
             onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
             disabled={page >= totalPages - 1}
-            className="rounded-full bg-[#f3f3f3] px-4 py-2 text-sm font-medium text-[#707070] transition-colors hover:bg-[#e0e0e0] disabled:opacity-40"
+            className="rounded-full bg-[#f3f3f3] px-4 py-2 text-sm font-medium text-[#707070] transition-colors hover:bg-[#e0e0e0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Next
           </button>

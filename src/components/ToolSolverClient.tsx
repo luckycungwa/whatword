@@ -93,29 +93,30 @@ export function ToolSolverClient({ mode, initialLetters = '' }: ToolSolverClient
 
   return (
     <div>
-      <div className="rounded-3xl bg-[#f3f3f3] p-6">
-        <label className="mb-1.5 block text-xs font-semibold text-[#707070]">
+      <div className="rounded-3xl bg-[#f3f3f3] p-4 sm:p-6">
+        <label htmlFor="solver-input" className="mb-1.5 block text-xs font-semibold text-[#707070]">
           {mode === 'anagram' ? 'Letters to rearrange' : 'Your letters'}
         </label>
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#adadad]" />
-            <input
-              type="text"
-              value={letters}
-              onChange={(e) => setLetters(e.target.value.toLowerCase().replace(/[^a-z]/g, '').slice(0, 15))}
-              placeholder={mode === 'anagram' ? 'e.g. listen' : 'e.g. aeplp'}
-              className="input-field !pl-10 !text-base tracking-widest"
-              aria-label="Enter letters"
-            />
-          </div>
+        <div className="flex items-center gap-2 rounded-2xl bg-white px-2 py-2">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f3f3f3] text-[#adadad]" aria-hidden="true">
+            <Search className="h-4 w-4" />
+          </span>
+          <input
+            id="solver-input"
+            type="text"
+            value={letters}
+            onChange={(e) => setLetters(e.target.value.toLowerCase().replace(/[^a-z]/g, '').slice(0, 15))}
+            placeholder={mode === 'anagram' ? 'e.g. listen' : 'e.g. aeplp'}
+            className="min-w-0 flex-1 bg-transparent py-2 text-base tracking-widest text-[#141414] placeholder:text-[#adadad] focus:outline-none"
+            aria-label="Enter letters"
+          />
           <button
             type="button"
             onClick={shuffle}
-            className="rounded-2xl border border-[#e0e0e0] bg-white px-4 text-sm font-medium text-[#707070] transition-colors hover:text-[#141414]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f3f3f3] text-[#707070] transition-colors hover:bg-[#e8e8e8] hover:text-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20"
             aria-label="Shuffle letters"
           >
-            <Shuffle className="h-4 w-4" />
+            <Shuffle className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
         <p className="mt-2 text-xs text-[#adadad]">

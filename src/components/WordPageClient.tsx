@@ -33,7 +33,7 @@ export interface WordIntelView {
 
 export function WordPageClient({ word, relatedWords, intel, definitionPending }: WordPageClientProps) {
   return (
-    <div className="container-app py-6 md:py-10">
+    <div className="container-app pb-10 pt-2 sm:pb-12">
       <Breadcrumbs items={[{ label: 'Words', href: '/words' }, { label: word.word }]} />
 
       {definitionPending && (
@@ -50,14 +50,14 @@ export function WordPageClient({ word, relatedWords, intel, definitionPending }:
             {/* Word header */}
             <div className="rounded-3xl bg-[#f3f3f3] p-6 md:p-8">
               <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-3xl font-bold text-[#141414] md:text-4xl">{word.word}</h1>
-                    <span className="badge">{word.difficulty}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <h1 className="break-words text-3xl font-bold leading-none text-[#141414] md:text-4xl">{word.word}</h1>
+                    <span className="badge shrink-0">{word.difficulty}</span>
                   </div>
-                  <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
-                    <span className="italic text-[#707070]">{word.phonetic}</span>
-                    <span className="text-[#adadad]">&middot;</span>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm sm:gap-3">
+                    {word.phonetic && <span className="break-all italic text-[#707070]">{word.phonetic}</span>}
+                    {word.phonetic && <span className="hidden text-[#adadad] sm:inline">&middot;</span>}
                     <span className="text-[#707070]">{word.partOfSpeech}</span>
                     <span className="text-[#adadad]">&middot;</span>
                     <span className="text-[#707070]">Level {word.vocabularyLevel}</span>
