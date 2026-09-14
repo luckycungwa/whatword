@@ -31,6 +31,8 @@ export default async function WordsPage() {
     intermediate: words.filter(w => w.difficulty === 'intermediate').length,
     advanced: words.filter(w => w.difficulty === 'advanced').length,
   };
+  // Deterministic number formatting to avoid hydration mismatches between server (Node) and client (browser)
+  const fmt = (n: number) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   return (
     <div className="container-app pb-10 pt-2 sm:pb-12">
@@ -40,7 +42,7 @@ export default async function WordsPage() {
         <h1 className="text-balance text-3xl font-bold leading-tight text-[#141414] sm:text-4xl">English Dictionary</h1>
         <p className="mt-3 text-pretty text-[17px] leading-6 text-[#707070] sm:text-lg sm:leading-7">
           {stats.total > 0
-            ? <>Search {stats.total.toLocaleString()} words in the graph{stats.verified > 0 && <> — {stats.verified.toLocaleString()} with verified definitions</>}.</>
+            ? <>Search {fmt(stats.total)} words in the graph{stats.verified > 0 && <> — {fmt(stats.verified)} with verified definitions</>}.</>
             : <>Type any word above to look it up. Every word is fetched live from the dictionary.</>
           }
         </p>
@@ -55,7 +57,7 @@ export default async function WordsPage() {
             { label: 'Advanced', value: stats.advanced },
           ].map(stat => (
             <div key={stat.label} className="rounded-2xl border border-[#e0e0e0] bg-white p-4 text-center">
-              <div className="text-2xl font-bold text-[#141414]">{stat.value.toLocaleString()}</div>
+              <div className="text-2xl font-bold text-[#141414]">{fmt(stat.value)}</div>
               <div className="mt-1 text-xs font-medium text-[#707070]">{stat.label}</div>
             </div>
           ))}

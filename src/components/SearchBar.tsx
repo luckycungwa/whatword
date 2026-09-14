@@ -142,14 +142,14 @@ export function SearchBar() {
     <div ref={wrapRef} className="relative mx-auto w-full max-w-2xl">
       <form onSubmit={handleSubmit} noValidate>
         <div
-          className={`flex items-center gap-2 rounded-2xl bg-[#f0f0f0] px-2 py-2 transition-all sm:px-3 ${
+          className={`flex items-center gap-2 rounded-2xl bg-[#f0f0f0] px-2 py-2.5 transition-all sm:px-3 ${
             focused ? 'ring-2 ring-[#141414]/10' : 'ring-0'
           }`}
         >
           <button
             type="submit"
             aria-label="Search"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#707070] shadow-sm transition-colors hover:text-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20 active:bg-[#f3f3f3] sm:h-11 sm:w-11"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[#707070] shadow-sm transition-colors hover:text-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20 active:bg-[#f3f3f3]"
           >
             {loading ? (
               <Loader2 className="h-[18px] w-[18px] animate-spin" aria-hidden="true" />
@@ -166,7 +166,7 @@ export function SearchBar() {
             onFocus={() => setFocused(true)}
             onKeyDown={handleKeyDown}
             placeholder="Search any word..."
-            className="min-w-0 flex-1 bg-transparent py-2 text-[16px] font-medium text-[#141414] placeholder:text-[#adadad] focus:outline-none"
+            className="min-w-0 flex-1 bg-transparent py-3 text-[16px] font-medium text-[#141414] placeholder:text-[#adadad] focus:outline-none"
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
@@ -186,13 +186,13 @@ export function SearchBar() {
                 setActiveIndex(-1);
                 inputRef.current?.focus();
               }}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[#adadad] transition-colors hover:bg-white hover:text-[#707070] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[#adadad] transition-colors hover:bg-white hover:text-[#707070] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20"
               aria-label="Clear search"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           ) : (
-            <span className="hidden w-10 shrink-0 sm:block" aria-hidden="true" />
+            <span className="hidden w-11 shrink-0 sm:block" aria-hidden="true" />
           )}
         </div>
       </form>

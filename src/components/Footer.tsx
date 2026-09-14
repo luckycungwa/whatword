@@ -33,7 +33,7 @@ const footerSections = [
 
 export function Footer() {
   return (
-    <footer className="mt-20 rounded-t-3xl bg-[#141414]">
+    <footer className="mt-12 rounded-t-3xl bg-[#141414] sm:mt-16">
       <div className="container-app py-16">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10">
           {/* Brand */}

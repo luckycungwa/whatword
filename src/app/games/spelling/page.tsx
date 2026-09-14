@@ -94,7 +94,7 @@ export default function SpellingPage() {
         <h1 className="text-2xl font-bold text-[#141414]">Spelling Challenge</h1>
         <p className="mt-2 text-[#707070]">Hear the word and type the correct spelling.</p>
 
-        <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3">
+        <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3" role="status" aria-live="polite">
           <div className="text-center"><div className="text-lg font-bold text-[#141414]">{score}</div><div className="text-[10px] text-[#707070]">Score</div></div>
           <div className="text-center"><div className="text-lg font-bold text-[#141414]">{finished ? rounds.length : current + 1}/{rounds.length}</div><div className="text-[10px] text-[#707070]">Round</div></div>
         </div>
@@ -117,8 +117,8 @@ export default function SpellingPage() {
                 ))}
               </div>
               <div className="mt-6 flex justify-center gap-3">
-                <button onClick={() => { fetchWords().then(w => { setRounds(w); setCurrent(0); setInput(''); setScore(0); setFinished(false); setAnswers([]); setShowHint(false); setSelected(null); }); }} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white hover:bg-game-dark"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
-                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">All Games</Link>
+                <button onClick={() => { fetchWords().then(w => { setRounds(w); setCurrent(0); setInput(''); setScore(0); setFinished(false); setAnswers([]); setShowHint(false); setSelected(null); }); }} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
+                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">All Games</Link>
               </div>
             </motion.div>
           ) : word ? (
@@ -129,7 +129,7 @@ export default function SpellingPage() {
               </div>
 
               <div className="mb-6 rounded-2xl border border-game/20 bg-game-light p-8 text-center">
-                <button onClick={playAudio} className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-game/10 transition-colors hover:bg-game/20">
+                <button onClick={playAudio} className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-game/10 transition-colors hover:bg-game/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40">
                   <Volume2 className="h-8 w-8 text-game" />
                 </button>
                 <p className="mt-3 text-sm text-[#707070]">Click to hear the word</p>
@@ -141,9 +141,9 @@ export default function SpellingPage() {
                   className="w-full rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3.5 text-center text-lg font-medium text-[#141414] placeholder:text-[#adadad] focus:border-[#141414] focus:outline-none focus:ring-2 focus:ring-[#141414]/20"
                   autoFocus autoComplete="off" aria-label="Type the correct spelling of the word" />
                 <div className="flex gap-3">
-                  <button type="button" onClick={() => setShowHint(true)} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">Hint</button>
-                  <button type="button" onClick={playAudio} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]"><Volume2 className="h-4 w-4" /></button>
-                  <button type="submit" className="flex-1 rounded-full bg-game py-3 text-sm font-medium text-white hover:bg-game-dark">Submit</button>
+                  <button type="button" onClick={() => setShowHint(true)} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">Hint</button>
+                  <button type="button" onClick={playAudio} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20"><Volume2 className="h-4 w-4" /></button>
+                  <button type="submit" className="flex-1 rounded-full bg-game py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40">Submit</button>
                 </div>
               </form>
             </motion.div>

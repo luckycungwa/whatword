@@ -12,8 +12,8 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav aria-label="Breadcrumb" className="pb-6 pt-2 sm:pb-8 sm:pt-3">
-      <ol className="flex flex-wrap items-center gap-1 text-[13px] leading-6 text-[#adadad] sm:text-sm">
+    <nav aria-label="Breadcrumb" className="pb-8 pt-8 sm:pb-10 sm:pt-8">
+      <ol className="flex flex-wrap items-center gap-1 text-[13px] leading-6 text-[#888888] sm:text-sm">
         <li>
           <Link
             href="/"
@@ -24,7 +24,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         </li>
         {items.map((item, i) => (
           <li key={i} className="flex min-w-0 items-center gap-1">
-            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[#e0e0e0]" aria-hidden="true" />
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[#c0c0c0]" aria-hidden="true" />
             {item.href ? (
               <Link
                 href={item.href}

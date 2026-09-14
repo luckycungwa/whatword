@@ -88,7 +88,7 @@ export default function DefinitionChallengePage() {
         <h1 className="text-2xl font-bold text-[#141414]">Definition Challenge</h1>
         <p className="mt-2 text-[#707070]">Match each definition to the correct word.</p>
 
-        <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3">
+        <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3" role="status" aria-live="polite">
           <div className="text-center"><div className="text-lg font-bold text-[#141414]">{score}</div><div className="text-[10px] text-[#707070]">Score</div></div>
           <div className="text-center"><div className="text-lg font-bold text-[#141414]">{finished ? rounds.length : current + 1}/{rounds.length}</div><div className="text-[10px] text-[#707070]">Round</div></div>
         </div>
@@ -111,8 +111,8 @@ export default function DefinitionChallengePage() {
                 ))}
               </div>
               <div className="mt-6 flex justify-center gap-3">
-                <button onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white hover:bg-game-dark"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
-                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">All Games</Link>
+                <button onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
+                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">All Games</Link>
               </div>
             </motion.div>
           ) : word ? (
@@ -131,13 +131,13 @@ export default function DefinitionChallengePage() {
                   const show = selected !== null;
                   return (
                     <button key={opt.word} onClick={() => handleSelect(opt.word)} disabled={!!selected}
-                      className={`w-full rounded-2xl border-2 px-5 py-3 text-left text-sm font-medium transition-all ${show && isAns ? 'border-green-500 bg-green-50 text-[#141414]' : show && isSel && !isAns ? 'border-red-500 bg-red-50 text-[#141414]' : 'border-[#f0f0f0] bg-white text-[#707070] hover:border-[#adadad] hover:bg-[#f3f3f3]'}`}>
+                      className={`w-full rounded-2xl border-2 px-5 py-3 text-left text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40 ${show && isAns ? 'border-green-500 bg-green-50 text-[#141414]' : show && isSel && !isAns ? 'border-red-500 bg-red-50 text-[#141414]' : 'border-[#f0f0f0] bg-white text-[#707070] hover:border-[#adadad] hover:bg-[#f3f3f3]'}`}>
                       <span className="flex items-center gap-3">{show && isAns && <CheckCircle2 className="h-5 w-5 text-green-500" />}{show && isSel && !isAns && <XCircle className="h-5 w-5 text-red-500" />}{opt.word}</span>
                     </button>
                   );
                 })}
               </div>
-              {selected && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-5"><button onClick={handleNext} className="w-full rounded-full bg-game py-3 text-sm font-medium text-white hover:bg-game-dark">{current < rounds.length - 1 ? 'Next' : 'Results'}</button></motion.div>}
+              {selected && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-5"><button onClick={handleNext} className="w-full rounded-full bg-game py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40">{current < rounds.length - 1 ? 'Next' : 'Results'}</button></motion.div>}
             </motion.div>
           ) : null}
         </AnimatePresence>

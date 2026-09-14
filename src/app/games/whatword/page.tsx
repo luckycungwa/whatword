@@ -149,7 +149,7 @@ export default function WhatWordGame() {
         <h1 className="text-2xl font-bold text-ink sm:text-3xl">WhatWord Challenge</h1>
         <p className="mt-2 text-muted">Guess the word from its definition.</p>
 
-        <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl border border-hairline bg-canvas p-4">
+        <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl border border-hairline bg-canvas p-4" role="status" aria-live="polite">
           <div className="text-center rounded-lg bg-game-washed p-3">
             <div className="text-lg font-bold text-ink">{score}</div>
             <div className="text-xs font-medium text-muted">Score</div>
@@ -188,10 +188,10 @@ export default function WhatWordGame() {
               </div>
 
               <div className="mt-6 flex items-center justify-center gap-3">
-                <button type="button" onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark">
+                <button type="button" onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40">
                   <RotateCcw className="mr-2 inline h-4 w-4" />Play Again
                 </button>
-                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3]">
+                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">
                   All Games
                 </Link>
               </div>
@@ -217,7 +217,7 @@ export default function WhatWordGame() {
                   const showResult = selected !== null;
                   return (
                     <button key={option} type="button" onClick={() => handleSelect(option)} disabled={!!selected}
-                      className={`w-full rounded-2xl border-2 px-5 py-3.5 text-left text-sm font-medium transition-all ${
+                      className={`w-full rounded-2xl border-2 px-5 py-3.5 text-left text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40 ${
                         showResult && isAnswer ? 'border-green-500 bg-green-50 text-[#141414]' :
                         showResult && isSelected && !isAnswer ? 'border-red-500 bg-red-50 text-[#141414]' :
                         'border-[#e0e0e0] bg-white text-[#707070] hover:border-[#e0e0e0] hover:bg-[#f3f3f3]'
@@ -234,7 +234,7 @@ export default function WhatWordGame() {
 
               {selected && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-5">
-                  <button type="button" onClick={handleNext} className="w-full rounded-full bg-game py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark">
+                  <button type="button" onClick={handleNext} className="w-full rounded-full bg-game py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40">
                     {current < rounds.length - 1 ? 'Next Round' : 'See Results'}
                   </button>
                 </motion.div>

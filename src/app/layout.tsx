@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <NavigationProgress />
         <Header />
-        <main id="main-content" className="flex-1 pt-[76px] sm:pt-[80px]">
+        <main id="main-content" className="flex-1 pt-24 sm:pt-24">
           {children}
         </main>
         <Footer />

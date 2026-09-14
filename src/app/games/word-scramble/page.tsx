@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, XCircle, RotateCcw, Trophy, Timer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -45,6 +45,14 @@ export default function WordScramblePage() {
 
   const word = rounds[current];
 
+  const handleTimeout = useCallback(() => {
+    setSelected('TIMEOUT');
+    setAnswers(a => [...a, { correct: false, word: word?.word ?? '' }]);
+    setInput('');
+    if (current < rounds.length - 1) { setCurrent(c => c + 1); setSelected(null); setShuffled(scramble(rounds[current + 1].word.toLowerCase())); }
+    else setFinished(true);
+  }, [current, rounds, word]);
+
   useEffect(() => {
     if (!word || finished) return;
     setTimeLeft(20);
@@ -58,15 +66,7 @@ export default function WordScramblePage() {
     if (timeLeft === 0 && word && !selected) {
       handleTimeout();
     }
-  }, [timeLeft, word, selected]);
-
-  const handleTimeout = () => {
-    setSelected('TIMEOUT');
-    setAnswers(a => [...a, { correct: false, word: word.word }]);
-    setInput('');
-    if (current < rounds.length - 1) { setCurrent(c => c + 1); setSelected(null); setShuffled(scramble(rounds[current + 1].word.toLowerCase())); }
-    else setFinished(true);
-  };
+  }, [timeLeft, word, selected, handleTimeout]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +111,7 @@ export default function WordScramblePage() {
         <h1 className="text-2xl font-bold text-[#141414]">Word Scramble</h1>
         <p className="mt-2 text-[#707070]">Unscramble the letters to find the word.</p>
 
-        <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3">
+        <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3" role="status" aria-live="polite">
           <div className="text-center"><div className="text-lg font-bold text-[#141414]">{score}</div><div className="text-[10px] text-[#707070]">Score</div></div>
           <div className="text-center"><div className="text-lg font-bold text-[#141414]">{finished ? rounds.length : current + 1}/{rounds.length}</div><div className="text-[10px] text-[#707070]">Round</div></div>
         </div>
@@ -130,8 +130,8 @@ export default function WordScramblePage() {
                 ))}
               </div>
               <div className="mt-6 flex justify-center gap-3">
-                <button onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white hover:bg-game-dark"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
-                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">All Games</Link>
+                <button onClick={handleRestart} className="rounded-full bg-game px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40"><RotateCcw className="mr-2 inline h-4 w-4" />Play Again</button>
+                <Link href="/games" className="rounded-full border border-[#e0e0e0] px-6 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">All Games</Link>
               </div>
             </motion.div>
           ) : word ? (
@@ -150,8 +150,8 @@ export default function WordScramblePage() {
                   className="w-full rounded-2xl border border-[#e0e0e0] bg-white px-5 py-3.5 text-center text-lg font-medium text-[#141414] placeholder:text-[#adadad] focus:border-[#141414] focus:outline-none focus:ring-2 focus:ring-[#141414]/20"
                   autoFocus autoComplete="off" aria-label="Type the unscrambled word" />
                 <div className="flex gap-3">
-                  <button type="button" onClick={handleHint} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] hover:bg-[#f3f3f3]">Hint</button>
-                  <button type="submit" className="flex-1 rounded-full bg-game py-3 text-sm font-medium text-white hover:bg-game-dark">Submit</button>
+                  <button type="button" onClick={handleHint} className="rounded-full border border-[#e0e0e0] px-4 py-3 text-sm font-medium text-[#707070] transition-colors hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]/20">Hint</button>
+                  <button type="submit" className="flex-1 rounded-full bg-game py-3 text-sm font-medium text-white transition-colors hover:bg-game-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game/40">Submit</button>
                 </div>
               </form>
             </motion.div>

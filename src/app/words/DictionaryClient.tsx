@@ -148,7 +148,7 @@ export default function DictionaryClient({ words }: { words: DictionaryRow[] }) 
 
       {/* Results count */}
       <div className="mt-4 text-sm text-[#707070]">
-        {filtered.length.toLocaleString()} word{filtered.length !== 1 ? 's' : ''}
+        {filtered.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} word{filtered.length !== 1 ? 's' : ''}
         {activeLetter && <> starting with <strong className="text-[#141414]">{activeLetter}</strong></>}
         {activePOS && <> — <strong className="text-[#141414] capitalize">{activePOS}</strong></>}
         {search && <> matching <strong className="text-[#141414]">&ldquo;{search}&rdquo;</strong></>}
